@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MECHCONNECT | Skills & Tools Development</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    
+    <link rel="stylesheet" href="style.css">    
+    <link rel="stylesheet" href="skill-hub.css">
+    
+</head>
+<body>
+
+<div id="header-container"></div>
+
+
+    <div class="container">
+        <!-- Header -->
+        <header class="page-header">
+            <h1 class="page-title">Skills Development</h1>
+            <p class="page-subtitle">
+                This page helps mechanical engineering students develop essential skills and tools from beginner to advanced levels. 
+                Explore resources, study guides, and roadmaps tailored for your engineering journey.
+            </p>
+        </header>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="toggle-btn active" id="skillsToggle">
+                <i class="fas fa-brain"></i> SKILLS
+            </button>
+            <button class="toggle-btn" id="toolsToggle">
+                <i class="fas fa-tools"></i> TOOLS
+            </button>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links" id="quickLinks">
+            <button class="link-btn" data-level="beginner">Beginner Skills</button>
+            <button class="link-btn" data-level="intermediate">Intermediate Skills</button>
+            <button class="link-btn" data-level="advanced">Advanced Skills</button>
+            <button class="link-btn" data-level="all">All Skills</button>
+        </div>
+
+        <!-- Skills View (Default) -->
+        <div id="skillsView">
+            <!-- Categories Accordion -->
+            <div class="categories-accordion" id="categoriesAccordion">
+                <!-- Categories will be dynamically generated here -->
+            </div>
+
+            <!-- All Skills View -->
+            <div class="all-view" id="allSkillsView">
+                <h2 style="text-align: center; margin-bottom: 25px; color: var(--primary-blue);">All Mechanical Engineering Skills</h2>
+                <div class="skill-list" id="allSkillsList">
+                    <!-- All skills will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools View -->
+        <div class="tools-view" id="toolsView">
+            <!-- Tool Quick Links -->
+            <div class="quick-links" id="toolQuickLinks">
+                <button class="link-btn" data-level="beginner">Beginner Tools</button>
+                <button class="link-btn" data-level="intermediate">Intermediate Tools</button>
+                <button class="link-btn" data-level="advanced">Advanced Tools</button>
+                <button class="link-btn" data-level="all">All Tools</button>
+            </div>
+
+            <!-- Tool Cards -->
+            <div class="tool-cards" id="toolCards">
+                <!-- Tool cards will be dynamically generated here -->
+            </div>
+
+            <!-- All Tools View -->
+            <div class="all-view" id="allToolsView">
+                <h2 style="text-align: center; margin-bottom: 25px; color: var(--primary-blue);">All Engineering Tools</h2>
+                <div class="tool-cards" id="allToolsList">
+                    <!-- All tools will be dynamically generated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Skill/Tool Detail View -->
+        <div class="detail-view" id="detailView">
+            <!-- Detail content will be dynamically generated here -->
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>MECHCONNECT &copy; 2023 | Mechanical Engineering Skills & Tools Platform</p>
+            <p style="margin-top: 5px;">Designed for students by engineers</p>
+        </div>
+    </div>
+
+    <script>
+        // Data structure for skills
+        const skillsData = {
+            "Engineering Fundamentals": [
+                { id: 1, name: "Statics", tools: ["Calculator (Casio fx)", "Pen & paper / tablet", "Python / MATLAB"], level: "beginner" },
+                { id: 2, name: "Strength of Materials", tools: ["Calculator", "Python / MATLAB", "ANSYS (intro level)"], level: "beginner" },
+                { id: 3, name: "Thermodynamics", tools: ["Steam tables (book/software)", "Calculator", "MATLAB / Python"], level: "intermediate" },
+                { id: 4, name: "Fluid Mechanics", tools: ["Calculator", "Python / MATLAB", "ANSYS Fluent (basic)"], level: "intermediate" },
+                { id: 5, name: "Machine Design", tools: ["Design handbooks", "Calculator", "Fusion 360 / SolidWorks"], level: "advanced" }
+            ],
+            "Design & CAD": [
+                { id: 6, name: "Engineering Drawing", tools: ["Pencil & paper / tablet", "AutoCAD", "ISO / ASME standards"], level: "beginner" },
+                { id: 7, name: "3D CAD Modeling", tools: ["Fusion 360", "SolidWorks", "AutoCAD"], level: "beginner" },
+                { id: 8, name: "Assembly Design", tools: ["Fusion 360", "SolidWorks", "BOM tools"], level: "intermediate" },
+                { id: 9, name: "Tolerances & Fits", tools: ["ISO fit tables", "Fusion 360 / SolidWorks", "Engineering handbooks"], level: "intermediate" },
+                { id: 10, name: "Design for Manufacturing (DFM)", tools: ["CAD software", "Manufacturing guidelines", "Workshop feedback"], level: "advanced" }
+            ],
+            "Analysis & Simulation": [
+                { id: 11, name: "Stress Analysis", tools: ["ANSYS Mechanical", "MATLAB", "Calculator"], level: "intermediate" },
+                { id: 12, name: "Finite Element Analysis (FEA – Basics)", tools: ["ANSYS", "Abaqus", "Fusion 360 Simulation"], level: "intermediate" },
+                { id: 13, name: "Thermal Analysis", tools: ["ANSYS Thermal", "MATLAB", "Python"], level: "advanced" },
+                { id: 14, name: "Motion & Kinematic Analysis", tools: ["SolidWorks Motion", "MATLAB", "Fusion 360"], level: "advanced" },
+                { id: 15, name: "Safety Factor & Failure Analysis", tools: ["ANSYS", "Design handbooks", "Manual calculations"], level: "advanced" }
+            ],
+            "Computation & Automation": [
+                { id: 16, name: "Python for Engineers", tools: ["Python", "VS Code", "Jupyter Notebook"], level: "beginner" },
+                { id: 17, name: "MATLAB for Engineering", tools: ["MATLAB", "Simulink"], level: "beginner" },
+                { id: 18, name: "Numerical Methods", tools: ["MATLAB", "Python (NumPy, SciPy)"], level: "intermediate" },
+                { id: 19, name: "Control Systems (Basics)", tools: ["MATLAB / Simulink", "Control system toolboxes"], level: "intermediate" },
+                { id: 20, name: "Arduino & Microcontrollers", tools: ["Arduino board", "Arduino IDE", "Sensors & actuators"], level: "advanced" }
+            ],
+            "Manufacturing, Practice & Communication": [
+                { id: 21, name: "Manufacturing Processes", tools: ["Textbooks", "Process charts", "Workshop exposure"], level: "beginner" },
+                { id: 22, name: "Workshop Practice", tools: ["Lathe", "Milling machine", "Hand tools"], level: "intermediate" },
+                { id: 23, name: "3D Printing (Additive Manufacturing)", tools: ["3D printer", "Cura / PrusaSlicer", "CAD software"], level: "intermediate" },
+                { id: 24, name: "Technical Writing", tools: ["Microsoft Word", "Google Docs", "LaTeX (optional)"], level: "intermediate" },
+                { id: 25, name: "Engineering Presentation & Communication", tools: ["PowerPoint", "Canva", "Google Slides"], level: "advanced" }
+            ]
+        };
+
+        // Data structure for tools
+        const toolsData = [
+            { id: 1, name: "Calculator (Casio fx)", level: "beginner", icon: "fa-calculator" },
+            { id: 2, name: "Pen & Paper / Tablet", level: "beginner", icon: "fa-edit" },
+            { id: 3, name: "Python", level: "beginner", icon: "fa-code" },
+            { id: 4, name: "MATLAB", level: "beginner", icon: "fa-calculator" },
+            { id: 5, name: "AutoCAD", level: "beginner", icon: "fa-drafting-compass" },
+            { id: 6, name: "Fusion 360", level: "intermediate", icon: "fa-cube" },
+            { id: 7, name: "SolidWorks", level: "intermediate", icon: "fa-cube" },
+            { id: 8, name: "ANSYS (Intro Level)", level: "intermediate", icon: "fa-project-diagram" },
+            { id: 9, name: "VS Code", level: "intermediate", icon: "fa-code" },
+            { id: 10, name: "Jupyter Notebook", level: "intermediate", icon: "fa-book" },
+            { id: 11, name: "Arduino", level: "advanced", icon: "fa-microchip" },
+            { id: 12, name: "ANSYS Fluent", level: "advanced", icon: "fa-water" },
+            { id: 13, name: "Abaqus", level: "advanced", icon: "fa-project-diagram" },
+            { id: 14, name: "LaTeX", level: "advanced", icon: "fa-file-alt" },
+            { id: 15, name: "Simulink", level: "advanced", icon: "fa-sitemap" }
+        ];
+
+        // Detail content templates
+        const skillDetailTemplate = (skill) => `
+            <div class="detail-header">
+                <div>
+                    <h1 class="detail-title">${skill.name}</h1>
+                    <p class="detail-description">Master this essential mechanical engineering skill through structured learning and practice.</p>
+                </div>
+                <button class="back-btn" id="backToSkills">
+                    <i class="fas fa-arrow-left"></i> Back to Skills
+                </button>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">About the Skill</h2>
+                <div class="section-content">
+                    <p>${skill.name} is a fundamental mechanical engineering skill that involves ${skill.name.toLowerCase().includes('analysis') ? 'analyzing systems and components' : skill.name.toLowerCase().includes('design') ? 'creating and optimizing mechanical systems' : 'understanding core engineering principles'}.</p>
+                    <p>This skill is essential for solving real-world engineering problems and is highly valued in industries such as automotive, aerospace, manufacturing, and energy.</p>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">Market Demand</h2>
+                <div class="section-content">
+                    <p><strong>High Demand:</strong> Engineers with ${skill.name} skills are sought after in multiple industries.</p>
+                    <p><strong>Salary Impact:</strong> Proficiency in ${skill.name} can increase salary potential by 15-25%.</p>
+                    <p><strong>Industry Applications:</strong> Automotive, Aerospace, Energy, Manufacturing, Robotics.</p>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">
+                    Study Guide
+                    <button class="toggle-section" data-section="study-guide">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </h2>
+                <div class="section-content hidden" id="study-guide-content">
+                    <h3>Why Learn ${skill.name}?</h3>
+                    <p>This skill forms the foundation for advanced engineering work and is required for most mechanical engineering roles.</p>
+                    
+                    <h3>Learning Strategy</h3>
+                    <p>Start with fundamentals, practice with real-world examples, and gradually tackle more complex problems.</p>
+                    
+                    <h3>Learning Methods</h3>
+                    <ul>
+                        <li>Theoretical study from textbooks</li>
+                        <li>Practical application through projects</li>
+                        <li>Software simulation practice</li>
+                        <li>Peer learning and discussion</li>
+                    </ul>
+                    
+                    <h3>Mindset</h3>
+                    <p>Approach problems systematically and be persistent in understanding underlying principles.</p>
+                    
+                    <h3>Common Pitfalls</h3>
+                    <ul>
+                        <li>Skipping fundamental concepts</li>
+                        <li>Not enough practical application</li>
+                        <li>Relying too much on software without understanding theory</li>
+                    </ul>
+                    
+                    <h3>Checklist</h3>
+                    <ul>
+                        <li>Understand basic principles</li>
+                        <li>Complete practice problems</li>
+                        <li>Apply to a small project</li>
+                        <li>Learn relevant software tools</li>
+                        <li>Create a portfolio example</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">Roadmap</h2>
+                <div class="section-content">
+                    <div class="resource-item">
+                        <span class="level-badge beginner-badge">Beginner</span>
+                        <span>Learn fundamentals, basic principles, and simple applications</span>
+                    </div>
+                    <div class="resource-item">
+                        <span class="level-badge intermediate-badge">Intermediate</span>
+                        <span>Apply to practical problems, use software tools, complete small projects</span>
+                    </div>
+                    <div class="resource-item">
+                        <span class="level-badge advanced-badge">Advanced</span>
+                        <span>Solve complex problems, optimize systems, lead projects, mentor others</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">Tools Needed</h2>
+                <div class="section-content">
+                    <div class="tools-container">
+                        ${skill.tools.map(tool => `<button class="tool-btn">${tool}</button>`).join('')}
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">Video Resources</h2>
+                <div class="section-content">
+                    <div class="resource-list">
+                        <div class="resource-item">
+                            <i class="fas fa-play-circle"></i>
+                            <span class="level-badge beginner-badge">Beginner</span>
+                            <span>Introduction to ${skill.name} - Fundamentals Tutorial</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-play-circle"></i>
+                            <span class="level-badge beginner-badge">Beginner</span>
+                            <span>${skill.name} Basic Concepts Explained</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-play-circle"></i>
+                            <span class="level-badge intermediate-badge">Intermediate</span>
+                            <span>${skill.name} Practical Applications</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-play-circle"></i>
+                            <span class="level-badge intermediate-badge">Intermediate</span>
+                            <span>Advanced ${skill.name} Problem Solving</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-play-circle"></i>
+                            <span class="level-badge advanced-badge">Advanced</span>
+                            <span>Mastering ${skill.name} - Complex Case Studies</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">Materials / Websites</h2>
+                <div class="section-content">
+                    <div class="resource-list">
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>MIT OpenCourseWare - ${skill.name} Course Materials</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Engineering Toolbox - ${skill.name} Reference</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>ASME ${skill.name} Standards and Guidelines</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Practice Problems and Solutions Database</span>
+                        </div>
+                        <div class="resource-item">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Industry Case Studies - ${skill.name} Applications</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render categories accordion
+            renderCategories();
+            
+            // Render tools
+            renderTools();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Render categories accordion
+        function renderCategories() {
+            const accordionContainer = document.getElementById('categoriesAccordion');
+            let accordionHTML = '';
+            
+            let categoryIndex = 0;
+            for (const [category, skills] of Object.entries(skillsData)) {
+                const isActive = categoryIndex === 0 ? 'active' : '';
+                const contentActive = categoryIndex === 0 ? 'active' : '';
+                
+                accordionHTML += `
+                    <div class="category-item">
+                        <div class="category-header ${isActive}" data-category="${category}">
+                            <span>${category}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-content ${contentActive}" id="content-${category.replace(/\s+/g, '-')}">
+                            <div class="skill-list">
+                                ${skills.map(skill => `
+                                    <div class="skill-item" data-skill-id="${skill.id}">
+                                        <div class="skill-name">${skill.name}</div>
+                                        <div class="skill-tools">
+                                            ${skill.tools.map(tool => `<span class="tool-tag">${tool}</span>`).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                categoryIndex++;
+            }
+            
+            accordionContainer.innerHTML = accordionHTML;
+            
+            // Also render all skills view
+            renderAllSkills();
+        }
+
+        // Render all skills view
+        function renderAllSkills() {
+            const allSkillsContainer = document.getElementById('allSkillsList');
+            let allSkillsHTML = '';
+            
+            for (const [category, skills] of Object.entries(skillsData)) {
+                for (const skill of skills) {
+                    allSkillsHTML += `
+                        <div class="skill-item" data-skill-id="${skill.id}">
+                            <div class="skill-name">${skill.name}</div>
+                            <div class="skill-tools">
+                                ${skill.tools.map(tool => `<span class="tool-tag">${tool}</span>`).join('')}
+                            </div>
+                            <div style="margin-top: 8px; font-size: 0.85rem; color: #666;">
+                                <span class="level-badge ${skill.level}-badge">${skill.level.charAt(0).toUpperCase() + skill.level.slice(1)}</span>
+                                <span> | ${category}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            allSkillsContainer.innerHTML = allSkillsHTML;
+        }
+
+        // Render tools
+        function renderTools() {
+            const toolsContainer = document.getElementById('toolCards');
+            let toolsHTML = '';
+            
+            // Sort tools by level
+            const sortedTools = [...toolsData].sort((a, b) => {
+                const levelOrder = { beginner: 1, intermediate: 2, advanced: 3 };
+                return levelOrder[a.level] - levelOrder[b.level];
+            });
+            
+            sortedTools.forEach(tool => {
+                toolsHTML += `
+                    <div class="tool-card" data-tool-id="${tool.id}">
+                        <div class="tool-icon">
+                            <i class="fas ${tool.icon}"></i>
+                        </div>
+                        <div class="tool-card-name">${tool.name}</div>
+                        <div class="tool-card-level">
+                            <span class="level-badge ${tool.level}-badge">${tool.level.charAt(0).toUpperCase() + tool.level.slice(1)} Level</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            toolsContainer.innerHTML = toolsHTML;
+            
+            // Also render all tools view
+            renderAllTools();
+        }
+
+        // Render all tools view
+        function renderAllTools() {
+            const allToolsContainer = document.getElementById('allToolsList');
+            let allToolsHTML = '';
+            
+            // Sort tools by level
+            const sortedTools = [...toolsData].sort((a, b) => {
+                const levelOrder = { beginner: 1, intermediate: 2, advanced: 3 };
+                return levelOrder[a.level] - levelOrder[b.level];
+            });
+            
+            sortedTools.forEach(tool => {
+                allToolsHTML += `
+                    <div class="tool-card" data-tool-id="${tool.id}">
+                        <div class="tool-icon">
+                            <i class="fas ${tool.icon}"></i>
+                        </div>
+                        <div class="tool-card-name">${tool.name}</div>
+                        <div class="tool-card-level">
+                            <span class="level-badge ${tool.level}-badge">${tool.level.charAt(0).toUpperCase() + tool.level.slice(1)} Level</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            allToolsContainer.innerHTML = allToolsHTML;
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Toggle between Skills and Tools
+            document.getElementById('skillsToggle').addEventListener('click', function() {
+                setActiveMode('skills');
+            });
+            
+            document.getElementById('toolsToggle').addEventListener('click', function() {
+                setActiveMode('tools');
+            });
+            
+            // Category accordion headers
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('category-header') || 
+                    e.target.closest('.category-header')) {
+                    const header = e.target.classList.contains('category-header') 
+                        ? e.target 
+                        : e.target.closest('.category-header');
+                    
+                    const category = header.getAttribute('data-category');
+                    
+                    // Close all category contents
+                    document.querySelectorAll('.category-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Remove active class from all headers
+                    document.querySelectorAll('.category-header').forEach(h => {
+                        h.classList.remove('active');
+                    });
+                    
+                    // Open clicked category
+                    header.classList.add('active');
+                    document.getElementById(`content-${category.replace(/\s+/g, '-')}`).classList.add('active');
+                }
+            });
+            
+            // Quick links for skills
+            document.querySelectorAll('#quickLinks .link-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    document.querySelectorAll('#quickLinks .link-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const level = this.getAttribute('data-level');
+                    
+                    if (level === 'all') {
+                        // Show all skills view
+                        document.getElementById('categoriesAccordion').style.display = 'none';
+                        document.getElementById('allSkillsView').style.display = 'block';
+                    } else {
+                        // Show filtered skills in categories view
+                        document.getElementById('categoriesAccordion').style.display = 'block';
+                        document.getElementById('allSkillsView').style.display = 'none';
+                        
+                        // Filter skills by level (in a real app, this would filter the displayed skills)
+                        document.querySelectorAll('.skill-item').forEach(item => {
+                            // In a real implementation, we would filter based on data attribute
+                            // For now, we'll just highlight items of the selected level
+                            const skillId = parseInt(item.getAttribute('data-skill-id'));
+                            let skillLevel = '';
+                            
+                            // Find skill level from data
+                            for (const [category, skills] of Object.entries(skillsData)) {
+                                const skill = skills.find(s => s.id === skillId);
+                                if (skill) {
+                                    skillLevel = skill.level;
+                                    break;
+                                }
+                            }
+                            
+                            if (skillLevel === level) {
+                                item.style.opacity = '1';
+                                item.style.borderLeft = '4px solid var(--accent-orange)';
+                            } else {
+                                item.style.opacity = '0.6';
+                                item.style.borderLeft = '4px solid #ddd';
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Quick links for tools
+            document.querySelectorAll('#toolQuickLinks .link-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    document.querySelectorAll('#toolQuickLinks .link-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const level = this.getAttribute('data-level');
+                    
+                    if (level === 'all') {
+                        // Show all tools view
+                        document.getElementById('toolCards').style.display = 'none';
+                        document.getElementById('allToolsView').style.display = 'block';
+                    } else {
+                        // Show filtered tools
+                        document.getElementById('toolCards').style.display = 'grid';
+                        document.getElementById('allToolsView').style.display = 'none';
+                        
+                        // Filter tools by level
+                        document.querySelectorAll('.tool-card').forEach(card => {
+                            const toolId = parseInt(card.getAttribute('data-tool-id'));
+                            const tool = toolsData.find(t => t.id === toolId);
+                            
+                            if (tool.level === level) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Skill item click
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.skill-item')) {
+                    const skillItem = e.target.closest('.skill-item');
+                    const skillId = parseInt(skillItem.getAttribute('data-skill-id'));
+                    
+                    // Find the skill data
+                    let selectedSkill = null;
+                    for (const [category, skills] of Object.entries(skillsData)) {
+                        const skill = skills.find(s => s.id === skillId);
+                        if (skill) {
+                            selectedSkill = { ...skill, category };
+                            break;
+                        }
+                    }
+                    
+                    if (selectedSkill) {
+                        showDetailView('skill', selectedSkill);
+                    }
+                }
+            });
+            
+            // Tool card click
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.tool-card')) {
+                    const toolCard = e.target.closest('.tool-card');
+                    const toolId = parseInt(toolCard.getAttribute('data-tool-id'));
+                    
+                    // Find the tool data
+                    const selectedTool = toolsData.find(t => t.id === toolId);
+                    
+                    if (selectedTool) {
+                        showDetailView('tool', selectedTool);
+                    }
+                }
+            });
+            
+            // Back button
+            document.addEventListener('click', function(e) {
+                if (e.target.id === 'backToSkills' || e.target.closest('#backToSkills')) {
+                    hideDetailView();
+                }
+            });
+            
+            // Toggle study guide sections
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('toggle-section') || 
+                    e.target.closest('.toggle-section')) {
+                    const toggleBtn = e.target.classList.contains('toggle-section') 
+                        ? e.target 
+                        : e.target.closest('.toggle-section');
+                    
+                    const sectionId = toggleBtn.getAttribute('data-section');
+                    const content = document.getElementById(`${sectionId}-content`);
+                    const icon = toggleBtn.querySelector('i');
+                    
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        content.classList.add('hidden');
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                }
+            });
+        }
+
+        // Set active mode (Skills or Tools)
+        function setActiveMode(mode) {
+            // Update toggle buttons
+            if (mode === 'skills') {
+                document.getElementById('skillsToggle').classList.add('active');
+                document.getElementById('toolsToggle').classList.remove('active');
+                
+                // Show skills view, hide tools view
+                document.getElementById('skillsView').style.display = 'block';
+                document.getElementById('toolsView').style.display = 'none';
+                
+                // Update quick links
+                document.getElementById('quickLinks').style.display = 'flex';
+                document.getElementById('toolQuickLinks').style.display = 'none';
+                
+                // Reset to default view
+                hideDetailView();
+                document.getElementById('categoriesAccordion').style.display = 'block';
+                document.getElementById('allSkillsView').style.display = 'none';
+                
+                // Reset quick link buttons
+                document.querySelectorAll('#quickLinks .link-btn').forEach((btn, index) => {
+                    btn.classList.remove('active');
+                    if (index === 0) btn.classList.add('active'); // Beginner Skills by default
+                });
+            } else {
+                document.getElementById('toolsToggle').classList.add('active');
+                document.getElementById('skillsToggle').classList.remove('active');
+                
+                // Show tools view, hide skills view
+                document.getElementById('toolsView').style.display = 'block';
+                document.getElementById('skillsView').style.display = 'none';
+                
+                // Update quick links
+                document.getElementById('quickLinks').style.display = 'none';
+                document.getElementById('toolQuickLinks').style.display = 'flex';
+                
+                // Reset to default view
+                hideDetailView();
+                document.getElementById('toolCards').style.display = 'grid';
+                document.getElementById('allToolsView').style.display = 'none';
+                
+                // Reset quick link buttons
+                document.querySelectorAll('#toolQuickLinks .link-btn').forEach((btn, index) => {
+                    btn.classList.remove('active');
+                    if (index === 0) btn.classList.add('active'); // Beginner Tools by default
+                });
+            }
+        }
+
+        // Show detail view for skill or tool
+        function showDetailView(type, item) {
+            // Hide main views
+            document.getElementById('skillsView').style.display = 'none';
+            document.getElementById('toolsView').style.display = 'none';
+            
+            // Show detail view
+            document.getElementById('detailView').style.display = 'block';
+            
+            // Generate detail content
+            if (type === 'skill') {
+                document.getElementById('detailView').innerHTML = skillDetailTemplate(item);
+            } else {
+                // For tools, we would have a similar template
+                document.getElementById('detailView').innerHTML = `
+                    <div class="detail-header">
+                        <div>
+                            <h1 class="detail-title">${item.name}</h1>
+                            <p class="detail-description">Engineering tool for mechanical design, analysis, and simulation.</p>
+                        </div>
+                        <button class="back-btn" id="backToSkills">
+                            <i class="fas fa-arrow-left"></i> Back to Tools
+                        </button>
+                    </div>
+                    <div class="detail-section">
+                        <h2 class="section-title">About the Tool</h2>
+                        <div class="section-content">
+                            <p>${item.name} is a ${item.level}-level engineering tool used for various mechanical engineering applications.</p>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <h2 class="section-title">Market Value</h2>
+                        <div class="section-content">
+                            <p>Proficiency with ${item.name} is highly valued in the engineering job market.</p>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <h2 class="section-title">
+                            Study Guide
+                            <button class="toggle-section" data-section="tool-study-guide">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </h2>
+                        <div class="section-content hidden" id="tool-study-guide-content">
+                            <p>Structured learning path for mastering ${item.name}.</p>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <h2 class="section-title">Video Resources</h2>
+                        <div class="section-content">
+                            <div class="resource-list">
+                                ${Array.from({length: 5}, (_, i) => `
+                                    <div class="resource-item">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>${item.name} Tutorial ${i+1} - Learning Resource</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Hide detail view
+        function hideDetailView() {
+            document.getElementById('detailView').style.display = 'none';
+            
+            // Show the appropriate main view based on current mode
+            if (document.getElementById('skillsToggle').classList.contains('active')) {
+                document.getElementById('skillsView').style.display = 'block';
+            } else {
+                document.getElementById('toolsView').style.display = 'block';
+            }
+        }
+    </script>
+    <script src="../js/components.js"></script>
+</body>
+</html>

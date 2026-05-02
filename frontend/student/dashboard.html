@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user || user.role !== "student") {
+        alert("Unauthorized access");
+        window.location.href = "../../index.html";
+    }
+});
+</script>
+
+    <meta charset="UTF-8">
+  
+    <title>Mechconnect Header</title>
+   <link rel="stylesheet" href="style.css">
+ </head>
+<body>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "../../index.html";
+}
+</script>
+
+<header class="mcj-header">
+    <div class="mobile-nav-toggle">
+        <div class="left">
+            <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
+        </div>
+
+        <!-- ===== OVERLAY ===== -->
+        <div id="overlay" class="overlay"></div>
+
+        <!-- ===== SIDE MENU (DRAWER) ===== -->
+        <div id="sideMenu" class="side-menu">
+            <h2 class="menu-title">Mechconnect</h2>
+            <ul class="menu-list">
+                <li><a href="dashboard.html">Home</a></li>
+                
+      <!-- ===== Academic Resources drop down===== -->          
+                <li>
+                    <a class="dropdown-toggle">Academic Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="academic-resource.html">Academic Course</a></li>
+                        <li><a href="past-question.html">Past Questions</a></li>
+                        <li><a href="study-guide.html">study guide</a></li>
+                    </ul>
+                </li>
+<!-- ===== Engineering Project ===== -->
+                <li>
+                    <a class="dropdown-toggle">Engineering Project</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="project2.html">Final Year Project</a></li>
+                        <li><a href="#">Project Option</a></li>
+                        <li><a href="#">Project Report</a></li>
+                    </ul>
+                </li>
+                    
+     <!-- ===== Student Community ===== -->
+                    <li>
+                        <a href="#" class="dropdown-toggle">Student Community</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Nimeche  Community</a></li>
+                            <li><a href=" ">Social Club</a></li>
+                            <li><a href="#">Project Community</a></li>
+                        </ul>
+                    </li>
+                    
+<!--NEWS/ EVENT/ ANNOUNCEMENT -->
+
+                <li><a href="event2.html">News/Event</a></li>
+                <li><a href="project.html"> Executive </a></li>
+                <li><a href="../Mechconnect2/index.html">Portal</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- DESKTOP NAV -->
+    <nav class="desktop-nav">
+        <ul class="desktop-nav-list">
+
+            <li><a href="#" class="dropdown-toggle desktop-nav-link">Home</a>
+            </li>
+            
+        <!-- desktop mode / Academic  resources -->
+            <li>
+<a href="" class="dropdown-toggle desktop-nav-link ">Academic Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="academic-resource.html">Academic Course</a></li>
+                        <li><a href="past-question.html">Past Questions</a></li>
+                        <li><a href="study-guide.html">study guide</a></li>
+                    </ul>
+</li>
+
+<!-- desktop mode / Engineering Project-->
+
+<li>
+<a href="" class="dropdown-toggle desktop-nav-link ">Engineering Project</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="project2.html">Final Year Project</a></li>
+                        <li><a href="#">Project Option</a></li>
+                        <li><a href="#">Project Report</a></li>
+                    </ul>
+                    </li>
+                    
+                    
+<!-- desktop mode / Student Community -->
+<li>
+                        <a href="#" class="dropdown-toggle desktop-nav-link ">Student Community</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Nimeche  Community</a></li>
+                            <li><a href=" ">Social Club</a></li>
+                            <li><a href="#">Project Community</a></li>
+                        </ul>
+                    </li>
+
+<!--Desktop Mode/------- NEWS/ EVENT/ ANNOUNCEMENT -->
+
+                <li><a href="event2.html"class="dropdown-toggle desktop-nav-link ">News/Event</a></li>
+                <!-- Desktop Mode/ Executive -->
+                <li><a href="project.html" class="dropdown-toggle desktop-nav-link "> Executive </a></li>
+                <!--Desktop Mode/ portal-->
+                <li><a href="../Mechconnect2/index.html" class="dropdown-toggle desktop-nav-link ">Portal</a></li>           
+        </ul>
+    </nav>
+
+    <div class="middle">
+        <input type="text" placeholder="Search..." class="search">
+    </div>
+
+    <div class="right">
+        <span class="futo">MECHCONNECT</span>
+    </div>
+</header>
+
+<div class="mechanical_futo_container">
+    <img src="../assets/images/futo_image.jpeg" alt="FUTO Logo">
+    <img src="../assets/images/MECH---DEPT.jpg" alt="FUTO Logo">
+    <div class="mechanical_futo">
+        THE FEDERAL UNIVERSITY<br>
+        OF TECHNOLOGY OWERRI
+    </div>
+</div>
+
+    
+    
+<section class="hero_banner">
+    <img class="home_page_img" src="../assets/images/hero_banner.jpeg" alt="Mechconnect Banner">
+    <div class="hero-content">
+        <h1>Start Your Journey in Mechanical Engineering at FUTO</h1>
+        <p>Research, Projects, Community — All in one platform</p>
+        <a href="https://futo.edu.ng" class="btn">Apply Now</a>
+        <a href="project.html" class="btn">Explore Projects</a>
+    </div>
+</section>
+
+
+<section class="news-events">
+    <div class="section-header">
+        <h2>NEWS / EVENTS</h2>
+    </div>
+
+    <div class="news-cards-container">
+        <!-- Card 1 -->
+        <div class="news-card">
+            <img src="../assets/images/orientation.jpg" alt="News 1">
+            <div class="card-content">
+                <h3>Engineering Workshop</h3>
+                <p>Join our workshop on robotics and automation this weekend.</p>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="news-card">
+            <img src="../assets/images/orientation.jpg" alt="News 2">
+            <div class="card-content">
+                <h3>Research Conference</h3>
+                <p>FUTO hosts annual research conference with industry leaders.</p>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="news-card">
+            <img src="../assets/images/orientation.jpg" alt="News 3">
+            <div class="card-content">
+                <h3>Project Expo</h3>
+                <p>Explore innovative student projects in mechanical engineering.</p>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="news-card">
+            <img src="images/orientation.jpg" alt="News 3">
+            <div class="card-content">
+                <h3>Project Expo</h3>
+                <p>Explore innovative student projects in mechanical engineering.</p>
+            </div>
+        </div>
+
+            <!-- Card 5 -->
+        <div class="news-card">
+            <img src="../assets/images/orientation.jpg" alt="News 3">
+            <div class="card-content">
+                <h3>Project Expo</h3>
+                <p>Explore innovative student projects in mechanical engineering.</p>
+            </div>
+        </div>
+        <!-- Add more cards as needed -->
+    </div>
+
+    <div class="view-more-container">
+        <a href="event2.html" class="view-more">View More</a>
+    </div>
+</section>
+
+      <!--   ENGINEERING PROJECT-->
+                
+                   
+<section class="engineering-project">
+    <div>
+        <ul class="project-link">
+            <li><a href="#">My project</a></li>
+            <li><a href="#">Project guide</a></li>
+        </ul>
+
+        <div class="project-container">
+
+            <div class="project-card">
+                <img src="../assets/images/Mechconnect.jpeg" alt="FUTO Mechanical Engineering" class="img-project">
+                <h4 class="project_name">Automatic Fire Detection</h4>
+                <p class="project_creator">Created by: MORKAH CHIEMERIE JOSHUA</p>
+                <p class="creator_level">Level: 400L</p>
+                <p class="project_info">
+                    Detects heat/smoke and activates a sprinkler or extinguisher.
+                    Enhances building safety.
+                </p>
+                <a href="#project1" class="project-btn">Read More</a>
+            </div>
+
+            <div class="project-card">
+                <img src="../assets/images/Mechconnect.jpeg" alt="FUTO Mechanical Engineering" class="img-project">
+                <h4 class="project_name">Automatic Fire Detection</h4>
+                <p class="project_creator">Created by: MORKAH CHIEMERIE JOSHUA</p>
+                <p class="creator_level">Level: 400L</p>
+                <p class="project_info">
+                    Detects heat/smoke and activates a sprinkler or extinguisher.
+                    Enhances building safety.
+                </p>
+                <a href="#project1" class="project-btn">Read More</a>
+            </div>
+
+            <div class="project-card">
+                <img src="../assets/images/Mechconnect.jpeg" alt="FUTO Mechanical Engineering" class="img-project">
+                <h4 class="project_name">Automatic Fire Detection</h4>
+                <p class="project_creator">Created by: MORKAH CHIEMERIE JOSHUA</p>
+                <p class="creator_level">Level: 400L</p>
+                <p class="project_info">
+                    Detects heat/smoke and activates a sprinkler or extinguisher.
+                    Enhances building safety.
+                </p>
+                <a href="#project1" class="project-btn">Read More</a>
+            </div>
+
+        </div>
+
+        <div class="view-more-container">
+            <button class="view-more"><a href="project2.html" >View More</a></button>
+        </div>
+    </div>
+</section>
+
+<section class="academic-resources">
+  <h2>Academic Resources</h2>
+  <div class="cards-container">
+    <div class="card">
+      <h3>Academic Courses</h3>
+      <p>Explore all available courses and their details.</p>
+      <button>View Courses</button>
+    </div>
+    <div class="card">
+      <h3>Past Questions</h3>
+      <p>Access previous exams to practice and prepare.</p>
+      <button>View Questions</button>
+    </div>
+  </div>
+</section>
+
+
+<div class="dashboard-card skills-hub-card">
+  <div class="card-header">
+    <h3>Mechanical Engineering Skills Hub</h3>
+    <p>Develop core and digital engineering skills</p>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-item">
+      <span class="skill-title">Design & CAD</span>
+      <span class="skill-desc">3D modeling & assemblies</span>
+    </div>
+
+    <div class="skill-item">
+      <span class="skill-title">Simulation</span>
+      <span class="skill-desc">Stress, thermal & flow analysis</span>
+    </div>
+
+    <div class="skill-item">
+      <span class="skill-title">Programming</span>
+      <span class="skill-desc">Python & engineering logic</span>
+    </div>
+
+    <div class="skill-item">
+      <span class="skill-title">Workshop Skills</span>
+      <span class="skill-desc">Machining & tool handling</span>
+    </div>
+  </div>
+</div>
+
+<script src="../js/auth-guard.js"></script>
+<script src="script.js"></script>
+
+
+</body>
+<html>

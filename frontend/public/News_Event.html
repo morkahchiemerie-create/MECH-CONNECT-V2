@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechconnect Header</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="News_Event.css">
+</head>
+<body>
+
+<div id="header-container"></div>
+<section class="news-section">
+
+    <!-- HEADER -->
+    <div class="news-header">
+        <h2>Latest News</h2>
+        <p>Stay updated with departmental announcements and achievements</p>
+    </div>
+
+    <!-- FILTER (TABS FOR DESKTOP) -->
+    <div class="category-filter">
+        <button class="active">Upcoming News</button>
+        <button>Department News</button>
+        <button>Student Achievements</button>
+        <button>Research & Innovation</button>
+        <button>University News</button>
+    </div>
+
+    <!-- DROPDOWN FOR MOBILE -->
+    <div class="category-dropdown">
+        <select>
+            <option>Upcoming News</option>
+            <option>Department News</option>
+            <option>Student Achievements</option>
+            <option>Research & Innovation</option>
+            <option>University News</option>
+        </select>
+    </div>
+
+    <!-- NEWS CARDS GRID -->
+    <div class="news-grid">
+
+        <!-- CARD 1 -->
+        <div class="news-card">
+            <img src="../assets/images/orientation.jpg" alt="News Image">
+            <h3>Mechanical Engineering Fresher's Orientation 2025</h3>
+            <p>The department has set apart a day for new coming student to socialise,build connection and meet prominent people in the department.</p>
+            <div class="news-date">Dec 11, 2025</div>
+            <a href="#">Read More →</a>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="news-card">
+            <img src="https://via.placeholder.com/300x150" alt="News Image">
+            <h3>Mechanical Engineering Siwes(IT) Defence</h3>
+            <p> Eventful day for Mechanical Engineering students to present and defend skills during siwes training</p>
+            <div class="news-date">Nov 20, 2025</div>
+            <a href="#">Read More →</a>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="news-card">
+            <img src="../assets/images/iot.jpg" alt="News Image">
+            <h3>Embedded Systems and Robotics</h3>
+            <p>Come and learning how embedded systems works and how IOT and Robotics revolutionise  tech world.</p>
+            <div class="news-date">Nov 28, 2025</div>
+            <a href="#">Read More →</a>
+        </div>
+
+    </div>
+
+    <!-- VIEW ALL BUTTON -->
+    <div class="view-all-container">
+        <button class="view-all-btn">View All News</button>
+    </div>
+
+</section>
+<script src="script.js"></script>
+<script src="../js/components.js"></script>
+</body>
+</html>

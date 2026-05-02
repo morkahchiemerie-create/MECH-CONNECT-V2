@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mechconnect — Student Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="academic-resource.css">
+</head>
+<body>
+
+<div id="header-container"></div>
+
+
+<div class="container">
+<h1>Select Your Level</h1>
+
+<ul class="levels">
+
+<li>
+  <div class="level" onclick="toggleSemester(this)">100L</div>
+  <ul class="semesters">
+    <li class="semester" onclick="clickSemester(0)">First Semester</li>
+    <li class="semester" onclick="clickSemester(1)">Second Semester</li>
+  </ul>
+</li>
+
+<li>
+  <div class="level" onclick="toggleSemester(this)">200L</div>
+  <ul class="semesters">
+    <li class="semester" onclick="clickSemester(2)">First Semester</li>
+    <li class="semester" onclick="clickSemester(3)">Second Semester</li>
+  </ul>
+</li>
+
+<li>
+  <div class="level" onclick="toggleSemester(this)">300L</div>
+  <ul class="semesters">
+    <li class="semester" onclick="clickSemester(4)">First Semester</li>
+    <li class="semester" onclick="clickSemester(5)">Second Semester</li>
+  </ul>
+</li>
+
+<li>
+  <div class="level" onclick="toggleSemester(this)">400L</div>
+  <ul class="semesters">
+    <li class="semester" onclick="selectSemester('400-first')">First Semester</li>
+    <li class="semester" onclick="selectSemester('400-second')">Second Semester</li>
+  </ul>
+</li>
+
+<li>
+  <div class="level" onclick="toggleSemester(this)">500L</div>
+  <ul class="semesters">
+    <li class="semester" onclick="selectSemester('500-first')">First Semester</li>
+    <li class="semester" onclick="selectSemester('500-second')">Second Semester</li>
+  </ul>
+</li>
+
+</ul>
+</div>
+
+<div class="display"></div>
+
+<!-- HIDDEN COURSE BANK -->
+<div id="hidden" style="display:none">
+
+<!-- 100L -->
+<ul class="courseCode"><li><a href="dashboard.html">ENS101</a></li><li><a href="dashboard.html">ENG101</a></li><li><a href="dashboard.html">MEE101</a></li></ul>
+<ul class="courseCode"><li><a href="dashboard.html">ENS102</a></li><li><a href="dashboard.html">ENG102</a></li><li><a href="dashboard.html">MEE102</a></li></ul>
+
+<!-- 200L -->
+<ul class="courseCode"><li><a href="dashboard.html">ENS201</a></li><li><a href="dashboard.html">ENG201</a></li><li><a href="dashboard.html">MEE201</a></li></ul>
+<ul class="courseCode"><li><a href="dashboard.html">ENS202</a></li><li><a href="dashboard.html">ENG202</a></li><li><a href="dashboard.html">MEE203</a></li></ul>
+
+<!-- 300L -->
+<ul class="courseCode"><li><a href="dashboard.html">ENS301</a></li><li><a href="dashboard.html">ENG301</a></li><li><a href="dashboard.html">MEE301</a></li></ul>
+<ul class="courseCode"><li><a href="dashboard.html">ENS302</a></li><li><a href="dashboard.html">ENG304</a></li><li><a href="dashboard.html">MEE305</a></li></ul>
+
+<!-- 400L -->
+<ul class="courseCode" id="ipe-400-first">
+<li>
+<a href="dashboard.html">IPE401</a>
+<a href="dashboard.html">IPE401</a>
+<a href="dashboard.html">IPE401</a>
+<a href="dashboard.html">IPE401</a>
+</li>
+</ul>
+
+
+<ul class="courseCode" id="ipe-400-second"><li><a href="dashboard.html">IPE402</a></li></ul>
+<ul class="courseCode" id="ate-400-first"><li><a href="dashboard.html">ATE401</a></li></ul>
+<ul class="courseCode" id="ate-400-second"><li><a href="dashboard.html">ATE402</a></li></ul>
+<ul class="courseCode" id="are-400-first"><li><a href="dashboard.html">ARE401</a></li></ul>
+<ul class="courseCode" id="are-400-second"><li><a href="dashboard.html">ARE402</a></li></ul>
+
+<!-- 500L -->
+<ul class="courseCode" id="ipe-500-first">
+<li><a href="dashboard.html">IPE 501</a></li>
+<li>strength of material</li>
+</ul>
+
+<ul class="courseCode" id="ipe-500-second"><li><a href="dashboard.html">IPE504</a></li></ul>
+<ul class="courseCode" id="ate-500-first"><li><a href="dashboard.html">ATE501</a></li></ul>
+<ul class="courseCode" id="ate-500-second"><li><a href="dashboard.html">ATE504</a></li></ul>
+<ul class="courseCode" id="are-500-first"><li><a href="dashboard.html">ARE501</a></li></ul>
+<ul class="courseCode" id="are-500-second"><li><a href="dashboard.html">ARE504</a></li></ul>
+
+<div id="optionBox">
+  <button onclick="showOption('ipe')">IPE</button>
+  <button onclick="showOption('ate')">ATE</button>
+  <button onclick="showOption('are')">ARE</button>
+</div>
+
+</div>
+<script src="../js/components.js"></script>
+<script src="script.js"></script>
+<script src="academic-resource .js"></script>
+</body>
+</html>

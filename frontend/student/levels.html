@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mechconnect — Student Dashboard</title>
+  <style>
+    
+    .container{
+    background: yellow ;
+    height:450px;
+    margin:100px 20px ; 
+    overflow: hidden; 
+    }
+    
+    .level-intro{
+    margin:20px 10px;
+    background:blue;
+    text-align:center;
+    }
+    .semester{
+    padding-left:10px;
+    }
+    .level{
+    background:red;
+    list-style-type: none;
+    font-size:35px;
+  </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class= "level-intro" >Select Your Level</h1>
+        
+        <ul class= "semester" >
+        <li class= "level" >100L  </li>
+        
+        </ul>
+        
+        
+        
+        
+        
+        
+        
+        </ul>
+        
+    </div>
+
+
+ <script>
+    // Select all level titles
+const levelTitles = document.querySelectorAll('.level-title');
+
+levelTitles.forEach(title => {
+    title.addEventListener('click', () => {
+        const semesters = title.nextElementSibling;
+
+        // Close all other semesters
+        document.querySelectorAll('.semesters').forEach(s => {
+            if (s !== semesters) {
+                s.style.display = 'none';
+            }
+        });
+
+        // Toggle the clicked one
+        semesters.style.display = semesters.style.display === 'block' ? 'none' : 'block';
+    });
+});
+
+  </script>
+
+
+</body>
+</html>

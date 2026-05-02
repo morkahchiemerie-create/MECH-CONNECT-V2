@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department News & Events</title>
+    
+    
+    
+ <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="event2.css">
+</head>
+<body>
+
+<div id="header-container"></div>
+
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Department News & Events</h1>
+            <p>Stay updated with the latest announcements, deadlines, and activities</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-label">Filter by Category</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All News</button>
+                <button class="filter-btn" data-filter="academic">Academic</button>
+                <button class="filter-btn" data-filter="department">Department</button>
+                <button class="filter-btn" data-filter="event">Event</button>
+            </div>
+        </div>
+
+        <!-- Priority Buttons Section -->
+        <div class="priority-section">
+            <div class="priority-buttons">
+                <button class="priority-btn important" data-priority="important">Important News</button>
+                <button class="priority-btn new" data-priority="new">New News</button>
+            </div>
+        </div>
+
+        <!-- News Cards Section -->
+        <div class="news-section">
+            <div class="news-count">Showing <span id="newsCount">10</span> news items</div>
+            <div class="news-list" id="newsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample news data
+        const newsData = [
+            {
+                id: 1,
+                title: "Final Examination Schedule Released",
+                description: "The final examination timetable for Semester 2, 2025-26 is now available. Students are advised to check their exam dates and report any clashes within 48 hours.",
+                category: "academic",
+                date: "2026-02-04",
+                isImportant: true,
+                timestamp: new Date('2026-02-04T09:00:00'),
+                image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop"
+            },
+            {
+                id: 2,
+                title: "Guest Lecture on Artificial Intelligence",
+                description: "Join us for an engaging session with Dr. Sarah Mitchell from MIT on 'The Future of AI in Healthcare' on February 10th at 3:00 PM in Auditorium B.",
+                category: "event",
+                date: "2026-02-03",
+                isImportant: false,
+                timestamp: new Date('2026-02-03T14:30:00'),
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop"
+            },
+            {
+                id: 3,
+                title: "New Computer Lab Inauguration",
+                description: "The department is pleased to announce the inauguration of a state-of-the-art computer lab equipped with 50 high-performance workstations on February 8th.",
+                category: "department",
+                date: "2026-02-03",
+                isImportant: false,
+                timestamp: new Date('2026-02-03T11:00:00'),
+                image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=400&fit=crop"
+            },
+            {
+                id: 4,
+                title: "Registration Deadline Extension",
+                description: "Course registration deadline has been extended to February 7th. Students who haven't completed registration must do so before the deadline to avoid late fees.",
+                category: "academic",
+                date: "2026-02-02",
+                isImportant: true,
+                timestamp: new Date('2026-02-02T16:00:00'),
+                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=400&fit=crop"
+            },
+            {
+                id: 5,
+                title: "Annual Technical Symposium 2026",
+                description: "Mark your calendars! TechFest 2026 will be held from March 15-17. Registration opens February 12th. Exciting prizes and workshops await!",
+                category: "event",
+                date: "2026-02-02",
+                isImportant: false,
+                timestamp: new Date('2026-02-02T10:00:00'),
+                image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=400&fit=crop"
+            },
+            {
+                id: 6,
+                title: "Head of Department Message",
+                description: "Prof. James Anderson shares his vision for the department's growth and welcomes suggestions from students for improving academic programs and facilities.",
+                category: "department",
+                date: "2026-02-01",
+                isImportant: false,
+                timestamp: new Date('2026-02-01T09:00:00'),
+                image: "https://images.unsplash.com/photo-1560439514-4e9645039924?w=800&h=400&fit=crop"
+            },
+            {
+                id: 7,
+                title: "Mid-Semester Results Published",
+                description: "Mid-semester examination results are now available on the student portal. Students scoring below 40% are required to meet their respective course instructors.",
+                category: "academic",
+                date: "2026-02-01",
+                isImportant: true,
+                timestamp: new Date('2026-02-01T08:00:00'),
+                image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop"
+            },
+            {
+                id: 8,
+                title: "Industry Workshop on Cloud Computing",
+                description: "Amazon Web Services is conducting a hands-on workshop on cloud architecture on February 14th. Limited seats available. Register by February 9th.",
+                category: "event",
+                date: "2026-01-31",
+                isImportant: false,
+                timestamp: new Date('2026-01-31T15:00:00'),
+                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop"
+            },
+            {
+                id: 9,
+                title: "Library Hours Extended During Exam Period",
+                description: "The department library will remain open until 11:00 PM starting February 15th to support students during the examination period.",
+                category: "department",
+                date: "2026-01-31",
+                isImportant: false,
+                timestamp: new Date('2026-01-31T12:00:00'),
+                image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=400&fit=crop"
+            },
+            {
+                id: 10,
+                title: "Lecture Rescheduling Notice",
+                description: "Advanced Database Systems lecture scheduled for February 6th has been rescheduled to February 8th at 2:00 PM in Room 304 due to faculty travel.",
+                category: "academic",
+                date: "2026-01-30",
+                isImportant: true,
+                timestamp: new Date('2026-01-30T17:00:00'),
+                image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&h=400&fit=crop"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentPriority = null;
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function renderNews() {
+            let filteredNews = [...newsData];
+
+            // Apply category filter
+            if (currentFilter !== 'all') {
+                filteredNews = filteredNews.filter(news => news.category === currentFilter);
+            }
+
+            // Apply priority filter
+            if (currentPriority === 'important') {
+                filteredNews = filteredNews.filter(news => news.isImportant);
+            } else if (currentPriority === 'new') {
+                filteredNews.sort((a, b) => b.timestamp - a.timestamp);
+            }
+
+            // Limit to 10 items
+            filteredNews = filteredNews.slice(0, 10);
+
+            const newsList = document.getElementById('newsList');
+            const newsCount = document.getElementById('newsCount');
+            newsCount.textContent = filteredNews.length;
+
+            if (filteredNews.length === 0) {
+                newsList.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">📭</div>
+                        <div class="no-results-text">No news items found</div>
+                        <div class="no-results-subtext">Try adjusting your filters</div>
+                    </div>
+                `;
+                return;
+            }
+
+            newsList.innerHTML = filteredNews.map(news => `
+                <div class="news-card ${news.isImportant ? 'important' : ''}">
+                    <img src="${news.image}" alt="${news.title}">
+                    <div class="news-card-content">
+                        <span class="category-badge ${news.category}">${news.category}</span>
+                        <h3>${news.title}</h3>
+                        <p>${news.description}</p>
+                        <div class="news-date">${formatDate(news.date)}</div>
+                        <a href="#">Read More →</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter button handlers
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.getAttribute('data-filter');
+                currentPriority = null;
+                document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
+                renderNews();
+            });
+        });
+
+        // Priority button handlers
+        document.querySelectorAll('.priority-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const priority = this.getAttribute('data-priority');
+                
+                if (currentPriority === priority) {
+                    currentPriority = null;
+                    this.classList.remove('active');
+                } else {
+                    document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentPriority = priority;
+                }
+                
+                renderNews();
+            });
+        });
+
+        // Initial render
+        renderNews();
+    </script>
+    <script src="../js/components.js"></script>
+</body>
+</html>

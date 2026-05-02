@@ -1,0 +1,145 @@
+<!-- FAQ Section Start -->
+<section id="faq" class="faq-section">
+  <div class="container">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <button class="faq-question">1. What is Mechanical Engineering?</button>
+      <div class="faq-answer">
+        <p>Mechanical Engineering is the study of designing, building, and analyzing machines, systems, and processes. It combines physics, materials, and creativity to solve real-world problems — from robotics to energy systems.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">2. What skills will I learn as a mechanical engineering student?</button>
+      <div class="faq-answer">
+        <p>You’ll learn problem-solving, CAD (computer-aided design), thermodynamics, robotics, materials analysis, teamwork, and project management — skills used in many industries.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">3. Is Mechanical Engineering a difficult course?</button>
+      <div class="faq-answer">
+        <p>It is challenging, but manageable with dedication. Students who practice consistently, participate in projects, and seek guidance often excel and find the learning process very rewarding.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">4. What kind of projects will I work on?</button>
+      <div class="faq-answer">
+        <p>Projects include designing machines, automation systems, renewable energy devices, and real-world solutions. Our department emphasizes hands-on experience through labs and MECHCONNECT collaboration.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">5. What careers can I pursue after graduation?</button>
+      <div class="faq-answer">
+        <p>Mechanical engineers work in energy, manufacturing, aerospace, automotive, robotics, and research. Graduates can also work in tech startups, government agencies, and international companies.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">6. Do I need special software or tools?</button>
+      <div class="faq-answer">
+        <p>Yes, you will use tools like Fusion 360, ANSYS, and Python for simulations and design. Labs and digital platforms like MECHCONNECT provide access to all essential resources.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">7. Can I work on projects with other students?</button>
+      <div class="faq-answer">
+        <p>Absolutely. Collaboration is a core part of learning. MECHCONNECT allows students to share ideas, build projects together, and get feedback from lecturers and peers.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">8. Are there labs and workshops for practical learning?</button>
+      <div class="faq-answer">
+        <p>Yes. The department has fully equipped labs and workshops where students can apply theory to real-world tasks safely under supervision.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">9. What are the admission requirements?</button>
+      <div class="faq-answer">
+        <p>Applicants should meet university-level entry requirements (UTME/JAMB). Recommended subjects include Mathematics, Physics, Chemistry, and English. Admission is handled by the university.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">10. Why should I choose this Mechanical Engineering department?</button>
+      <div class="faq-answer">
+        <p>We combine high-quality teaching, hands-on projects, research opportunities, and digital learning platforms like MECHCONNECT to prepare students for global careers in engineering.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- FAQ Section End -->
+
+<style>
+/* Basic Container */
+.faq-section {
+  padding: 60px 20px;
+  background: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #1f2937;
+}
+
+/* FAQ Item */
+.faq-item {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.faq-question {
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  background: #fff;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.faq-question:hover {
+  background: #f1f1f1;
+}
+
+.faq-answer {
+  display: none;
+  padding: 15px;
+  background: #fefefe;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+</style>
+
+<script>
+// Accordion functionality
+const faqItems = document.querySelectorAll('.faq-question');
+
+faqItems.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const answer = btn.nextElementSibling;
+
+    // Toggle visibility
+    if(answer.style.display === 'block'){
+      answer.style.display = 'none';
+    } else {
+      // Close all other answers
+      document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+      answer.style.display = 'block';
+    }
+  });
+});
+</script>

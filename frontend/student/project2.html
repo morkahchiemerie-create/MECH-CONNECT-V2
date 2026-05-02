@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Final Year Projects Archive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="project2.css">
+</head>
+<body>
+
+<div id="header-container"></div>
+
+
+    
+    <header>
+        <div class="container">
+            <h1>Engineering Final Year Projects</h1>
+            <p>A digital archive and discovery platform for final year engineering projects across multiple academic years</p>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="searchBar" placeholder="Search projects by title, student name, department, or keywords...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="filter-section">
+            <div class="filter-header">
+                <h3><i class="fas fa-filter"></i> Filter by Category</h3>
+                <button class="clear-filters-btn" id="clearFiltersBtn">Clear All Filters</button>
+            </div>
+            <div class="filter-tags" id="filterTags">
+                <div class="filter-tag" data-category="Robotics">Robotics</div>
+                <div class="filter-tag" data-category="Energy">Energy</div>
+                <div class="filter-tag" data-category="Manufacturing">Manufacturing</div>
+                <div class="filter-tag" data-category="AI">AI</div>
+                <div class="filter-tag" data-category="Design">Design</div>
+                <div class="filter-tag" data-category="Mechatronics">Mechatronics</div>
+            </div>
+        </div>
+
+        <div id="projectsContainer"></div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About</h3>
+                    <p>The Engineering Final Year Projects Archive is a comprehensive digital repository showcasing innovative engineering solutions developed by final year students. Our platform connects students, lecturers, and researchers, fostering collaboration and knowledge sharing across multiple engineering disciplines.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:projects@engineering.edu">projects@engineering.edu</a>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+1234567890">+1 (234) 567-890</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-upload"></i> Submit a Project</a></li>
+                        <li><a href="#"><i class="fas fa-building"></i> Browse by Department</a></li>
+                        <li><a href="#"><i class="fas fa-book"></i> Research Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Engineering Final Year Projects Archive. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Project Data
+        const projectsData = {
+            2026: [
+                {
+                    title: "Autonomous Solar-Powered Irrigation System",
+                    student: "Sarah Mitchell",
+                    department: "Mechatronics",
+                    category: "Mechatronics",
+                    description: "An intelligent irrigation system using solar energy and IoT sensors to optimize water usage in agriculture.",
+                    icon: "fa-leaf"
+                },
+                {
+                    title: "AI-Powered Quality Control for Manufacturing",
+                    student: "James Chen",
+                    department: "AI & Robotics",
+                    category: "AI",
+                    description: "Computer vision system for real-time defect detection in manufacturing assembly lines.",
+                    icon: "fa-robot"
+                },
+                {
+                    title: "Wind Turbine Blade Optimization",
+                    student: "Emily Rodriguez",
+                    department: "Energy Systems",
+                    category: "Energy",
+                    description: "Advanced aerodynamic design for improved efficiency in small-scale wind turbines.",
+                    icon: "fa-wind"
+                },
+                {
+                    title: "Modular Robotic Arm for Medical Applications",
+                    student: "Michael Brown",
+                    department: "Robotics",
+                    category: "Robotics",
+                    description: "Precision robotic system designed for minimally invasive surgical procedures.",
+                    icon: "fa-hand-holding-medical"
+                },
+                {
+                    title: "Sustainable Building Material from Waste Plastics",
+                    student: "Lisa Wang",
+                    department: "Materials Engineering",
+                    category: "Manufacturing",
+                    description: "Converting recycled plastics into durable construction materials with enhanced properties.",
+                    icon: "fa-recycle"
+                },
+                {
+                    title: "Smart Wheelchair with Obstacle Detection",
+                    student: "David Kumar",
+                    department: "Mechatronics",
+                    category: "Mechatronics",
+                    description: "Intelligent wheelchair featuring automated navigation and safety systems.",
+                    icon: "fa-wheelchair"
+                }
+            ],
+            2025: [
+                {
+                    title: "3D Printed Prosthetic Hand with Haptic Feedback",
+                    student: "Anna Thompson",
+                    department: "Biomedical Engineering",
+                    category: "Design",
+                    description: "Cost-effective prosthetic solution with tactile sensing capabilities.",
+                    icon: "fa-hand-paper"
+                },
+                {
+                    title: "Machine Learning for Traffic Flow Optimization",
+                    student: "Robert Lee",
+                    department: "AI & Systems",
+                    category: "AI",
+                    description: "Predictive model for reducing urban traffic congestion using real-time data.",
+                    icon: "fa-traffic-light"
+                },
+                {
+                    title: "Hybrid Energy Storage System",
+                    student: "Maria Garcia",
+                    department: "Energy Systems",
+                    category: "Energy",
+                    description: "Combined battery and supercapacitor system for renewable energy applications.",
+                    icon: "fa-battery-full"
+                },
+                {
+                    title: "Collaborative Assembly Robot",
+                    student: "Thomas Anderson",
+                    department: "Robotics",
+                    category: "Robotics",
+                    description: "Safe human-robot collaboration system for flexible manufacturing environments.",
+                    icon: "fa-industry"
+                },
+                {
+                    title: "Automated PCB Inspection System",
+                    student: "Jessica Park",
+                    department: "Manufacturing",
+                    category: "Manufacturing",
+                    description: "High-speed visual inspection for printed circuit board quality control.",
+                    icon: "fa-microchip"
+                },
+                {
+                    title: "Exoskeleton for Industrial Workers",
+                    student: "Daniel Wright",
+                    department: "Mechatronics",
+                    category: "Mechatronics",
+                    description: "Powered assistance device to reduce workplace injuries and fatigue.",
+                    icon: "fa-user-astronaut"
+                }
+            ],
+            2024: [
+                {
+                    title: "Smart Grid Energy Management Platform",
+                    student: "Olivia Martinez",
+                    department: "Energy Systems",
+                    category: "Energy",
+                    description: "IoT-based system for optimizing energy distribution in smart grids.",
+                    icon: "fa-bolt"
+                },
+                {
+                    title: "Drone-Based Agricultural Monitoring",
+                    student: "Ethan Johnson",
+                    department: "Robotics",
+                    category: "Robotics",
+                    description: "Autonomous UAV system for crop health assessment and precision farming.",
+                    icon: "fa-drone"
+                },
+                {
+                    title: "Neural Network for Predictive Maintenance",
+                    student: "Sophia Kim",
+                    department: "AI & Data Science",
+                    category: "AI",
+                    description: "Deep learning model to predict equipment failures in industrial settings.",
+                    icon: "fa-brain"
+                },
+                {
+                    title: "Modular Furniture Design System",
+                    student: "William Taylor",
+                    department: "Industrial Design",
+                    category: "Design",
+                    description: "Customizable furniture platform for small living spaces.",
+                    icon: "fa-couch"
+                },
+                {
+                    title: "Automated Warehouse Picking System",
+                    student: "Ava Wilson",
+                    department: "Manufacturing",
+                    category: "Manufacturing",
+                    description: "Robotic solution for efficient order fulfillment in logistics.",
+                    icon: "fa-boxes"
+                },
+                {
+                    title: "Adaptive Suspension System for Vehicles",
+                    student: "Lucas Davis",
+                    department: "Mechatronics",
+                    category: "Mechatronics",
+                    description: "Real-time adjustable suspension for improved ride comfort and handling.",
+                    icon: "fa-car"
+                }
+            ],
+            2023: [
+                {
+                    title: "Wireless Power Transfer for Electric Vehicles",
+                    student: "Isabella Moore",
+                    department: "Energy Systems",
+                    category: "Energy",
+                    description: "Inductive charging system for seamless EV power delivery.",
+                    icon: "fa-charging-station"
+                },
+                {
+                    title: "Humanoid Robot for Customer Service",
+                    student: "Noah Thomas",
+                    department: "Robotics",
+                    category: "Robotics",
+                    description: "Interactive robot designed for hospitality and retail environments.",
+                    icon: "fa-robot"
+                },
+                {
+                    title: "Computer Vision for Sign Language Translation",
+                    student: "Mia Jackson",
+                    department: "AI & Computer Science",
+                    category: "AI",
+                    description: "Real-time gesture recognition system for accessibility.",
+                    icon: "fa-hands"
+                },
+                {
+                    title: "Biodegradable Packaging from Agricultural Waste",
+                    student: "Alexander White",
+                    department: "Materials Engineering",
+                    category: "Manufacturing",
+                    description: "Eco-friendly packaging solution using renewable resources.",
+                    icon: "fa-seedling"
+                },
+                {
+                    title: "Ergonomic Tool Design for Construction Workers",
+                    student: "Charlotte Harris",
+                    department: "Industrial Design",
+                    category: "Design",
+                    description: "Redesigned hand tools to reduce repetitive strain injuries.",
+                    icon: "fa-tools"
+                },
+                {
+                    title: "Smart Parking Guidance System",
+                    student: "Benjamin Clark",
+                    department: "Mechatronics",
+                    category: "Mechatronics",
+                    description: "Sensor-based solution for efficient parking space utilization.",
+                    icon: "fa-parking"
+                }
+            ]
+        };
+
+        // State
+        let activeFilters = [];
+        let searchQuery = '';
+
+        // Initialize
+        function init() {
+            renderAllProjects();
+            setupEventListeners();
+        }
+
+        // Render all projects
+        function renderAllProjects() {
+            const container = document.getElementById('projectsContainer');
+            container.innerHTML = '';
+
+            const years = Object.keys(projectsData).sort((a, b) => b - a);
+            
+            years.forEach(year => {
+                const filteredProjects = filterProjects(projectsData[year]);
+                
+                if (filteredProjects.length > 0) {
+                    const yearSection = createYearSection(year, filteredProjects);
+                    container.appendChild(yearSection);
+                }
+            });
+
+            // Show no results message if all sections are empty
+            if (container.children.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No projects found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Filter projects
+        function filterProjects(projects) {
+            return projects.filter(project => {
+                // Filter by category
+                if (activeFilters.length > 0 && !activeFilters.includes(project.category)) {
+                    return false;
+                }
+
+                // Filter by search query
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    return (
+                        project.title.toLowerCase().includes(query) ||
+                        project.student.toLowerCase().includes(query) ||
+                        project.department.toLowerCase().includes(query) ||
+                        project.description.toLowerCase().includes(query)
+                    );
+                }
+
+                return true;
+            });
+        }
+
+        // Create year section
+        function createYearSection(year, projects) {
+            const section = document.createElement('div');
+            section.className = 'year-section';
+            
+            section.innerHTML = `
+                <div class="year-header">
+                    <h2 class="year-title">${year} Projects</h2>
+                    <span class="project-count">${projects.length} Project${projects.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="projects-container">
+                    <button class="scroll-btn left" onclick="scrollProjects('${year}', 'left')">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="projects-scroll-wrapper" id="scroll-${year}">
+                        <div class="projects-grid">
+                            ${projects.map(project => createProjectCard(project)).join('')}
+                        </div>
+                    </div>
+                    <button class="scroll-btn right" onclick="scrollProjects('${year}', 'right')">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <a href="2026page.html" class="view-all-link">View All ${year} Projects <i class="fas fa-arrow-right"></i></a>
+            `;
+
+            return section;
+        }
+
+        // Create project card
+        function createProjectCard(project) {
+            return `
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas ${project.icon}"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-student"><i class="fas fa-user"></i> ${project.student}</p>
+                        <span class="department-badge">${project.department}</span>
+                        <p class="project-description">${project.description}</p>
+                        <button class="view-project-btn">View Project <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Scroll projects
+        function scrollProjects(year, direction) {
+            const wrapper = document.getElementById(`scroll-${year}`);
+            const scrollAmount = 340;
+            
+            if (direction === 'left') {
+                wrapper.scrollLeft -= scrollAmount;
+            } else {
+                wrapper.scrollLeft += scrollAmount;
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Filter tags
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                        activeFilters = activeFilters.filter(f => f !== category);
+                    } else {
+                        this.classList.add('active');
+                        activeFilters.push(category);
+                    }
+                    
+                    renderAllProjects();
+                });
+            });
+
+            // Clear filters
+            document.getElementById('clearFiltersBtn').addEventListener('click', function() {
+                activeFilters = [];
+                searchQuery = '';
+                document.getElementById('searchBar').value = '';
+                document.querySelectorAll('.filter-tag').forEach(tag => {
+                    tag.classList.remove('active');
+                });
+                renderAllProjects();
+            });
+
+            // Search bar
+            document.getElementById('searchBar').addEventListener('input', function(e) {
+                searchQuery = e.target.value;
+                renderAllProjects();
+            });
+        }
+
+        // Initialize on load
+        init();     
+    </script>
+    <script src="../js/components.js"></script>
+
+
+</body>
+</html>

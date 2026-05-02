@@ -1,0 +1,107 @@
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f7fb;
+        color: #1f2937;
+    }
+
+    /* HEADER */
+    .Mechconnect_header {
+        background: linear-gradient(135deg, #1e3a8a, #1e40af);
+        padding: 70px 20px 50px;
+        text-align: center;
+        color: white;
+        margin-top:120px;
+    }
+    .Mechconnect_header h1 {
+        font-size: 34px;
+        font-weight: 800;
+        margin: 0 0 10px;
+    }
+    .Mechconnect_header p {
+        font-size: 18px;
+        opacity: 0.95;
+    }
+
+    /* CONTENT WRAPPER */
+    .content {
+        max-width: 1100px;
+        margin: auto;
+        padding: 50px 20px;
+        line-height: 1.75;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        font-size: 26px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        color: #1e3a8a;
+        text-align: center;
+    }
+
+    /* CARD WRAPPER */
+    .card {
+        background: white;
+        padding: 25px;
+        margin-top: 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid #e5e7eb;
+    }
+    .card h3 {
+        margin-top: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-bottom: 12px;
+    }
+    .card p {
+        font-size: 16px;
+        color: #374151;
+    }
+
+    /* GRID */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    /* FEATURES CARD */
+    .feature-card {
+        background: white;
+        padding: 22px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        border: 1px solid #e5e7eb;
+        transition: 0.25s;
+    }
+    .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        border-color: #1e3a8a;
+    }
+    .feature-card h4 {
+        margin: 0 0 10px;
+        font-size: 19px;
+        color: #1e40af;
+        font-weight: 700;
+    }
+    .feature-card p {
+        margin: 0;
+        color: #374151;
+        font-size: 15px;
+    }
+
+    /* FOOTER */
+    .footer {
+        text-align: center;
+        padding: 30px;
+        margin-bottom: 0px;
+        background: #1e3a8a;
+        color: white;
+        font-size: 14px;
+    }

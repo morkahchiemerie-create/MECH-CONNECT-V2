@@ -1,0 +1,93 @@
+
+    /* ===== Global Styles ===== */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f8;
+        color: #333;
+    }
+    /* ===== Container ===== */
+    .container {
+        max-width: 1200px;
+        margin: 120px auto 50px auto; /* margin-top for fixed header */
+        width: 90%;
+        padding: 2rem 0;
+        text-align: center;
+        position: relative;
+        
+    }
+
+    /* ===== Testimonies Header ===== */
+    .testimonies-header h2 {
+        color: #1e3a8a;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+    }
+    .testimonies-header p.subtitle {
+        color: #4b5563;
+        font-weight: 500;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* ===== Testimony Cards Grid ===== */
+    .testimony-grid {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        justify-items: center;
+    }
+
+    .testimony-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 350px;
+        text-align: center;
+        border-top: 4px solid #1e3a8a; /* accent color */
+    }
+
+    .testimony-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 3px solid #1e3a8a;
+        transition: transform 0.3s ease;
+    }
+
+    .testimony-card:hover .avatar {
+        transform: scale(1.05);
+    }
+
+    .name {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1e3a8a;
+    }
+
+    .text {
+        font-size: 0.95rem;
+        color: #4b5563;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        .testimony-card {
+            max-width: 100%;
+        }
+    }
