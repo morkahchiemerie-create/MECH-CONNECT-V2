@@ -21,7 +21,7 @@ def create_app():
     db_path = os.path.join(basedir, "..", "instance", "mechconnect.db")
 
     # Flask configuration
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///" + db_path)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = "mechconnect_secret_key"
 
@@ -38,5 +38,10 @@ def create_app():
   # import and register routes
     from backend.routes.auth_routes import auth
     app.register_blueprint(auth, url_prefix="/api/auth")
+
+
+@app.route("/")
+def home():
+    return "MechConnect API is running!"
 
     return app
