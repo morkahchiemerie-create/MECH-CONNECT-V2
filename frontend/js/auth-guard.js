@@ -1,37 +1,56 @@
 // ===============================
-// MECHCONNECT AUTH GUARD (STEP 20)
+// MECHCONNECT AUTH GUARD
 // ===============================
 
-// Get logged-in user from localStorage
+// Get authentication data
+const token = localStorage.getItem("access_token");
 const user = JSON.parse(localStorage.getItem("user"));
 
-// Detect current page path
+// Current page path
 const path = window.location.pathname;
 
 // ===============================
-// 1. CHECK IF USER IS LOGGED IN
+// CHECK LOGIN
 // ===============================
-if (!user) {
-    alert("You are not logged in");
+if (!token || !user) {
+    alert("Please log in first.");
+
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+
     window.location.href = "/index.html";
 }
 
 // ===============================
-// 2. ROLE-BASED PROTECTION
+// ROLE PROTECTION
 // ===============================
 
-// STUDENT PAGES PROTECTION
+// Student Pages
 if (path.includes("/student/")) {
+
     if (user.role !== "student") {
-        alert("Unauthorized access (Student only)");
+
+        alert("Access denied.");
+
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+
         window.location.href = "/index.html";
     }
+
 }
 
-// LECTURER PAGES PROTECTION
+// Lecturer Pages
 if (path.includes("/lecturer/")) {
+
     if (user.role !== "lecturer") {
-        alert("Unauthorized access (Lecturer only)");
+
+        alert("Access denied.");
+
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
+
         window.location.href = "/index.html";
     }
+
 }

@@ -1,0 +1,269 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f8f9fa;
+    padding:30px;
+}
+
+.upload-page{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.upload-header{
+    margin-bottom:30px;
+}
+
+.mobile-upload-select{
+    display:none;
+}
+
+.mobile-upload-select select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #dcdcdc;
+    background:white;
+    font-size:16px;
+}
+
+.desktop-upload-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.category-btn{
+    padding:14px 22px;
+    border:none;
+    border-radius:12px;
+    background:#edf1f7;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:15px;
+    font-weight:600;
+}
+
+.category-btn:hover{
+    transform:translateY(-2px);
+}
+
+.category-btn.active{
+    background:#1d4ed8;
+    color:white;
+}
+
+.selected-category{
+    margin-top:20px;
+    padding:18px;
+    background:#f5f7fb;
+    border-radius:14px;
+}
+
+.selected-category h3{
+    color:#1e293b;
+    font-size:18px;
+}
+
+#selectedText{
+    color:#1d4ed8;
+}
+
+.upload-form-container{
+    margin-top:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+    gap:20px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.input-group label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:#334155;
+}
+
+.input-group input,
+.input-group select{
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #d7dce3;
+    outline:none;
+    background:#fff;
+    transition:0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus{
+    border-color:#2563eb;
+}
+
+.drag-area{
+    margin-top:35px;
+    border:2px dashed #cbd5e1;
+    border-radius:20px;
+    padding:50px 20px;
+    text-align:center;
+    background:#fafafa;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.drag-area:hover{
+    border-color:#2563eb;
+    background:#f8fbff;
+}
+
+.upload-icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.drag-content h2{
+    color:#1e293b;
+    margin-bottom:10px;
+}
+
+.drag-content p{
+    color:#64748b;
+    margin-bottom:20px;
+}
+
+.choose-file-btn{
+    padding:12px 22px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.choose-file-btn:hover{
+    transform:scale(1.03);
+}
+
+.file-preview{
+    margin-top:20px;
+    font-weight:600;
+    color:#0f172a;
+}
+
+.progress-container{
+    width:100%;
+    height:12px;
+    background:#e2e8f0;
+    border-radius:20px;
+    margin-top:25px;
+    overflow:hidden;
+    display:none;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:#2563eb;
+    border-radius:20px;
+    transition:width 0.3s ease;
+}
+
+.progress-text{
+    margin-top:12px;
+    font-size:14px;
+    color:#475569;
+    font-weight:600;
+    display:none;
+}
+
+.media-type-section{
+    margin-top:30px;
+}
+
+.media-type-section label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.media-type-section select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #d7dce3;
+}
+
+.action-buttons{
+    margin-top:35px;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.upload-btn,
+.back-btn{
+    flex:1;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.upload-btn{
+    background:#1d4ed8;
+    color:white;
+}
+
+.upload-btn:hover{
+    transform:translateY(-2px);
+}
+
+.back-btn{
+    background:#e2e8f0;
+    color:#0f172a;
+}
+
+.back-btn:hover{
+    background:#cbd5e1;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    .upload-page{
+        padding:20px;
+    }
+
+    .desktop-upload-buttons{
+        display:none;
+    }
+
+    .mobile-upload-select{
+        display:block;
+    }
+
+    .action-buttons{
+        flex-direction:column;
+    }
+}

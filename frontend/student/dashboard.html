@@ -1,328 +1,647 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user || user.role !== "student") {
-        alert("Unauthorized access");
-        window.location.href = "../../index.html";
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MECHCONNECT — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ===================== TOKENS ===================== */
+    :root {
+      --blue-deep:    #1B3A6B;
+      --blue-mid:     #2A52A0;
+      --blue-light:   #EAF0FF;
+      --orange:       #F97316;
+      --orange-light: #FFF4EC;
+      --dark:         #0D1B2A;
+      --muted:        #6B7A8D;
+      --surface:      #F8FAFF;
+      --white:        #FFFFFF;
+      --border:       #E2E8F4;
+      --radius:       14px;
+      --radius-sm:    8px;
     }
-});
-</script>
 
-    <meta charset="UTF-8">
-  
-    <title>Mechconnect Header</title>
-   <link rel="stylesheet" href="style.css">
- </head>
+    /* ===================== RESET ===================== */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--surface);
+      color: var(--dark);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* ===================== TOP BAR ===================== */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: var(--blue-deep);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(27,58,107,0.3);
+    }
+    .topbar-logo {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+    .topbar-logo span { color: var(--orange); }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-search {
+      background: rgba(255,255,255,0.12);
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: white;
+      font-size: 13px;
+      outline: none;
+      width: 140px;
+      transition: width 0.3s;
+    }
+    .topbar-search::placeholder { color: rgba(255,255,255,0.5); }
+    .topbar-search:focus { width: 180px; background: rgba(255,255,255,0.18); }
+    .avatar {
+      width: 34px; height: 34px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: white;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ===================== MAIN CONTENT ===================== */
+    .main {
+      margin-top: 56px;
+      padding: 24px 18px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===================== HERO / ID CARD ===================== */
+    .id-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border-left: 5px solid var(--orange);
+      padding: 22px 20px;
+      box-shadow: 0 4px 20px rgba(27,58,107,0.08);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .id-card::after {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .greeting-line {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .student-name {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--blue-deep);
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+    .student-name span { color: var(--orange); }
+    .id-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .id-item {}
+    .id-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .id-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .id-badge {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue-deep);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* ===================== SECTION LABEL ===================== */
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    /* ===================== QUICK ACCESS ===================== */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .quick-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      box-shadow: 0 2px 10px rgba(27,58,107,0.06);
+      text-decoration: none;
+      color: var(--dark);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+    }
+    .quick-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(27,58,107,0.12);
+      border-color: var(--border);
+    }
+    .quick-card:active { transform: translateY(0); }
+    .quick-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .icon-blue { background: var(--blue-light); }
+    .icon-orange { background: var(--orange-light); }
+    .quick-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .quick-card-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .quick-card.featured {
+      grid-column: span 2;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      background: var(--blue-deep);
+      color: white;
+    }
+    .quick-card.featured .quick-card-sub { color: rgba(255,255,255,0.6); }
+    .quick-card.featured .quick-icon { background: rgba(255,255,255,0.12); }
+    .quick-card.featured:hover { border-color: var(--orange); }
+    .featured-arrow {
+      margin-left: auto;
+      font-size: 20px;
+      color: var(--orange);
+    }
+
+    /* ===================== RECENT UPLOADS ===================== */
+    .recent-section { margin-bottom: 28px; }
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .see-all {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .upload-list { display: flex; flex-direction: column; gap: 10px; }
+    .upload-item {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(27,58,107,0.05);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .upload-item:hover { background: var(--blue-light); }
+    .file-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: var(--orange-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .file-icon.pdf { background: #FEE2E2; }
+    .file-icon.doc { background: #DBEAFE; }
+    .file-icon.img { background: #D1FAE5; }
+    .upload-info { flex: 1; min-width: 0; }
+    .upload-title {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .upload-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .upload-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: var(--blue-light);
+      color: var(--blue-deep);
+      flex-shrink: 0;
+    }
+
+    /* loading state */
+    .skeleton {
+      background: linear-gradient(90deg, #eef2ff 25%, #dde5ff 50%, #eef2ff 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+      height: 14px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skeleton-item {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex; gap: 14px; align-items: center;
+    }
+    .sk-icon { width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0; }
+    .sk-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+    /* ===================== UPCOMING / COMING SOON ===================== */
+    .coming-section { margin-bottom: 28px; }
+    .coming-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .coming-card {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      box-shadow: 0 2px 8px rgba(27,58,107,0.05);
+      opacity: 0.7;
+      position: relative;
+      overflow: hidden;
+    }
+    .coming-card::before {
+      content: 'COMING SOON';
+      position: absolute;
+      top: 8px; right: -16px;
+      background: var(--orange);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 20px;
+      transform: rotate(35deg);
+      letter-spacing: 0.5px;
+    }
+    .coming-icon { font-size: 22px; }
+    .coming-title { font-size: 13px; font-weight: 700; }
+    .coming-desc { font-size: 11px; color: var(--muted); }
+
+    /* ===================== BOTTOM NAV ===================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: var(--white);
+      border-top: 1.5px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding: 0 8px;
+    }
+    .nav-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 3px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 10px;
+      transition: background 0.15s;
+      text-decoration: none;
+      color: var(--muted);
+    }
+    .nav-item:hover { background: var(--blue-light); color: var(--blue-deep); }
+    .nav-item.active { color: var(--blue-deep); }
+    .nav-item.active .nav-icon { color: var(--orange); }
+    .nav-icon { font-size: 22px; }
+    .nav-label { font-size: 10px; font-weight: 600; }
+
+    /* ===================== LOGOUT ===================== */
+    .logout-btn {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .logout-btn:hover { border-color: #EF4444; color: #EF4444; }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (min-width: 560px) {
+      .main { padding: 28px 24px; }
+      .student-name { font-size: 30px; }
+    }
+  </style>
+</head>
 <body>
 
-<button onclick="logout()">Logout</button>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-logo">MECH<span>CONNECT</span></div>
+    <div class="topbar-right">
+      <input class="topbar-search" type="text" placeholder="Search resources…"/>
+      <div class="avatar" id="avatarInitial">?</div>
+    </div>
+  </header>
 
-<script>
-function logout() {
-    localStorage.removeItem("user");
-    window.location.href = "../../index.html";
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- STUDENT ID CARD -->
+    <div class="id-card">
+      <p class="greeting-line" id="greeting">Good morning 👋</p>
+      <h1 class="student-name">Welcome back, <span id="studentName">Student</span></h1>
+      <div class="id-grid">
+        <div class="id-item">
+          <div class="id-label">Department</div>
+          <div class="id-value">Mechanical Engineering</div>
+        </div>
+        <div class="id-item">
+          <div class="id-label">Level</div>
+          <div class="id-value"><span class="id-badge" id="studentLevel">—</span></div>
+        </div>
+        <div class="id-item">
+          <div class="id-label">Matric Number</div>
+          <div class="id-value" id="studentMatric">—</div>
+        </div>
+        <div class="id-item">
+          <div class="id-label">Residence</div>
+          <div class="id-value" id="studentResidence">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACCESS -->
+    <p class="section-label">Academic Resources</p>
+    <div class="quick-grid">
+
+      <a class="quick-card featured" href="#" onclick="goToSearch('Past Questions'); return false;">
+  <div class="quick-icon icon-blue">📚</div>
+  <div>
+    <div class="quick-card-title">Past Questions</div>
+    <div class="quick-card-sub">Find & study past exams fast</div>
+  </div>
+  <div class="featured-arrow">→</div>
+</a>
+
+<a class="quick-card" href="#" onclick="goToSearch('Materials'); return false;">
+  <div class="quick-icon icon-blue">🎓</div>
+  <div class="quick-card-title">Course Materials</div>
+  <div class="quick-card-sub">Notes & lecture slides</div>
+</a>
+
+<a class="quick-card" href="#" onclick="goToSearch('Assignments'); return false;">
+  <div class="quick-icon icon-orange">📝</div>
+  <div class="quick-card-title">Assignments</div>
+  <div class="quick-card-sub">Current & past assignments</div>
+</a>
+
+<a class="quick-card" href="#" onclick="goToSearch('Projects'); return false;">
+  <div class="quick-icon icon-blue">🔧</div>
+  <div class="quick-card-title">Projects</div>
+  <div class="quick-card-sub">Final year & mini projects</div>
+</a>
+
+<a class="quick-card" href="#" onclick="goToSearch('Reports'); return false;">
+  <div class="quick-icon icon-orange">📄</div>
+  <div class="quick-card-title">Reports</div>
+  <div class="quick-card-sub">SIWES & lab reports</div>
+</a>
+
+      <a class="quick-card" href="../../upload/upload.html">
+        <div class="quick-icon icon-orange">⬆️</div>
+        <div class="quick-card-title">Upload</div>
+        <div class="quick-card-sub">Contribute to the community</div>
+      </a>
+
+    </div>
+
+    <!-- RECENT UPLOADS -->
+    <div class="recent-section">
+      <div class="recent-header">
+        <p class="section-label" style="margin-bottom:0">Recent Uploads</p>
+        <a class="see-all" href="../academic-system/search-engine/global-search/global-search.html">See all →</a>
+      </div>
+      <div class="upload-list" id="recentList">
+        <!-- skeleton loaders -->
+        <div class="skeleton-item">
+          <div class="skeleton sk-icon"></div>
+          <div class="sk-lines">
+            <div class="skeleton" style="width:70%"></div>
+            <div class="skeleton" style="width:45%"></div>
+          </div>
+        </div>
+        <div class="skeleton-item">
+          <div class="skeleton sk-icon"></div>
+          <div class="sk-lines">
+            <div class="skeleton" style="width:80%"></div>
+            <div class="skeleton" style="width:40%"></div>
+          </div>
+        </div>
+        <div class="skeleton-item">
+          <div class="skeleton sk-icon"></div>
+          <div class="sk-lines">
+            <div class="skeleton" style="width:60%"></div>
+            <div class="skeleton" style="width:50%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMING SOON -->
+    <div class="coming-section">
+      <p class="section-label">Coming Soon</p>
+      <div class="coming-grid">
+        <div class="coming-card">
+          <div class="coming-icon">🗓️</div>
+          <div class="coming-title">Timetable</div>
+          <div class="coming-desc">Class reminders & schedule</div>
+        </div>
+        <div class="coming-card">
+          <div class="coming-icon">📊</div>
+          <div class="coming-title">GPA Tracker</div>
+          <div class="coming-desc">Track your academic progress</div>
+        </div>
+        <div class="coming-card">
+          <div class="coming-icon">📢</div>
+          <div class="coming-title">Announcements</div>
+          <div class="coming-desc">Dept. news & updates</div>
+        </div>
+        <div class="coming-card">
+          <div class="coming-icon">💳</div>
+          <div class="coming-title">Dues Payment</div>
+          <div class="coming-desc">Pay & track NIMECHE dues</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGOUT -->
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a class="nav-item active" href="dashboard.html">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a class="nav-item" href="../academic-system/dashboard/dashboard.html">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Courses</span>
+    </a>
+    <a class="nav-item" href="../academic-system/search-engine/global-search/global-search.html">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Search</span>
+    </a>
+    <a class="nav-item" href="../../upload/upload.html">
+      <span class="nav-icon">⬆️</span>
+      <span class="nav-label">Upload</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </a>
+  </nav>
+
+  <script>
+    // ===== AUTH GUARD =====
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role !== "student") {
+      alert("Unauthorized access");
+      window.location.href = "../../index.html";
+    }
+
+    // ===== GREETING =====
+    const hour = new Date().getHours();
+    const greetingEl = document.getElementById("greeting");
+    if (hour < 12) greetingEl.textContent = "Good morning 👋";
+    else if (hour < 17) greetingEl.textContent = "Good afternoon 👋";
+    else greetingEl.textContent = "Good evening 👋";
+
+    // ===== POPULATE STUDENT INFO =====
+    if (user) {
+      const firstName = (user.full_name || "Student").split(" ")[0];
+      document.getElementById("studentName").textContent = firstName;
+      document.getElementById("studentLevel").textContent = (user.level || "—") + " Level";
+      document.getElementById("studentMatric").textContent = user.matric_or_staff_id || "—";
+      document.getElementById("studentResidence").textContent = user.residence || "—";
+
+      // Avatar initial
+      const initial = (user.full_name || "S")[0].toUpperCase();
+      document.getElementById("avatarInitial").textContent = initial;
+    }
+
+    function goToSearch(category) {
+    const level = (user && user.level) ? user.level : "";
+    const url = `../academic-system/search-engine/global-search/global-search.html?category=${encodeURIComponent(category)}&level=${encodeURIComponent(level)}`;
+    window.location.href = url;
+    }
+
+    // ===== FETCH RECENT UPLOADS =====
+    async function loadRecentUploads() {
+  try {
+    const res = await fetch("http://127.0.0.1:5000/api/upload/all-files");
+    const data = await res.json();
+    const files = (data.files || []).slice(0, 5);
+    const list = document.getElementById("recentList");
+
+    if (!files.length) {
+      list.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">No uploads yet. Be the first to contribute!</p>`;
+      return;
+    }
+
+    const iconMap = {
+      pdf: { icon: "📄", cls: "pdf" },
+      doc: { icon: "📝", cls: "doc" },
+      docx: { icon: "📝", cls: "doc" },
+      png: { icon: "🖼️", cls: "img" },
+      jpg: { icon: "🖼️", cls: "img" },
+      jpeg: { icon: "🖼️", cls: "img" },
+    };
+
+    list.innerHTML = files.map(f => {
+      const ext = (f.filetype || "").toLowerCase();
+      const { icon, cls } = iconMap[ext] || { icon: "📎", cls: "" };
+      return `
+        <div class="upload-item" onclick="window.location.href='http://127.0.0.1:5000/api/upload/download/${f.id}'">
+          <div class="file-icon ${cls}">${icon}</div>
+          <div class="upload-info">
+            <div class="upload-title">${f.title}</div>
+            <div class="upload-meta">${f.course_code} · ${f.category} · ${f.upload_date || ""}</div>
+          </div>
+          <span class="upload-badge">${f.filetype ? f.filetype.toUpperCase() : "FILE"}</span>
+        </div>`;
+    }).join("");
+  } catch (e) {
+    document.getElementById("recentList").innerHTML =
+      `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">Could not load recent uploads.</p>`;
+  }
 }
-</script>
 
-<header class="mcj-header">
-    <div class="mobile-nav-toggle">
-        <div class="left">
-            <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
-        </div>
-
-        <!-- ===== OVERLAY ===== -->
-        <div id="overlay" class="overlay"></div>
-
-        <!-- ===== SIDE MENU (DRAWER) ===== -->
-        <div id="sideMenu" class="side-menu">
-            <h2 class="menu-title">Mechconnect</h2>
-            <ul class="menu-list">
-                <li><a href="dashboard.html">Home</a></li>
-                
-      <!-- ===== Academic Resources drop down===== -->          
-                <li>
-                    <a class="dropdown-toggle">Academic Resources</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="academic-resource.html">Academic Course</a></li>
-                        <li><a href="past-question.html">Past Questions</a></li>
-                        <li><a href="study-guide.html">study guide</a></li>
-                    </ul>
-                </li>
-<!-- ===== Engineering Project ===== -->
-                <li>
-                    <a class="dropdown-toggle">Engineering Project</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="project2.html">Final Year Project</a></li>
-                        <li><a href="#">Project Option</a></li>
-                        <li><a href="#">Project Report</a></li>
-                    </ul>
-                </li>
-                    
-     <!-- ===== Student Community ===== -->
-                    <li>
-                        <a href="#" class="dropdown-toggle">Student Community</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Nimeche  Community</a></li>
-                            <li><a href=" ">Social Club</a></li>
-                            <li><a href="#">Project Community</a></li>
-                        </ul>
-                    </li>
-                    
-<!--NEWS/ EVENT/ ANNOUNCEMENT -->
-
-                <li><a href="event2.html">News/Event</a></li>
-                <li><a href="project.html"> Executive </a></li>
-                <li><a href="../Mechconnect2/index.html">Portal</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- DESKTOP NAV -->
-    <nav class="desktop-nav">
-        <ul class="desktop-nav-list">
-
-            <li><a href="#" class="dropdown-toggle desktop-nav-link">Home</a>
-            </li>
-            
-        <!-- desktop mode / Academic  resources -->
-            <li>
-<a href="" class="dropdown-toggle desktop-nav-link ">Academic Resources</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="academic-resource.html">Academic Course</a></li>
-                        <li><a href="past-question.html">Past Questions</a></li>
-                        <li><a href="study-guide.html">study guide</a></li>
-                    </ul>
-</li>
-
-<!-- desktop mode / Engineering Project-->
-
-<li>
-<a href="" class="dropdown-toggle desktop-nav-link ">Engineering Project</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="project2.html">Final Year Project</a></li>
-                        <li><a href="#">Project Option</a></li>
-                        <li><a href="#">Project Report</a></li>
-                    </ul>
-                    </li>
-                    
-                    
-<!-- desktop mode / Student Community -->
-<li>
-                        <a href="#" class="dropdown-toggle desktop-nav-link ">Student Community</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Nimeche  Community</a></li>
-                            <li><a href=" ">Social Club</a></li>
-                            <li><a href="#">Project Community</a></li>
-                        </ul>
-                    </li>
-
-<!--Desktop Mode/------- NEWS/ EVENT/ ANNOUNCEMENT -->
-
-                <li><a href="event2.html"class="dropdown-toggle desktop-nav-link ">News/Event</a></li>
-                <!-- Desktop Mode/ Executive -->
-                <li><a href="project.html" class="dropdown-toggle desktop-nav-link "> Executive </a></li>
-                <!--Desktop Mode/ portal-->
-                <li><a href="../Mechconnect2/index.html" class="dropdown-toggle desktop-nav-link ">Portal</a></li>           
-        </ul>
-    </nav>
-
-    <div class="middle">
-        <input type="text" placeholder="Search..." class="search">
-    </div>
-
-    <div class="right">
-        <span class="futo">MECHCONNECT</span>
-    </div>
-</header>
-
-<div class="mechanical_futo_container">
-    <img src="../assets/images/futo_image.jpeg" alt="FUTO Logo">
-    <img src="../assets/images/MECH---DEPT.jpg" alt="FUTO Logo">
-    <div class="mechanical_futo">
-        THE FEDERAL UNIVERSITY<br>
-        OF TECHNOLOGY OWERRI
-    </div>
-</div>
-
-    
-    
-<section class="hero_banner">
-    <img class="home_page_img" src="../assets/images/hero_banner.jpeg" alt="Mechconnect Banner">
-    <div class="hero-content">
-        <h1>Start Your Journey in Mechanical Engineering at FUTO</h1>
-        <p>Research, Projects, Community — All in one platform</p>
-        <a href="https://futo.edu.ng" class="btn">Apply Now</a>
-        <a href="project.html" class="btn">Explore Projects</a>
-    </div>
-</section>
+loadRecentUploads();
 
 
-<section class="news-events">
-    <div class="section-header">
-        <h2>NEWS / EVENTS</h2>
-    </div>
-
-    <div class="news-cards-container">
-        <!-- Card 1 -->
-        <div class="news-card">
-            <img src="../assets/images/orientation.jpg" alt="News 1">
-            <div class="card-content">
-                <h3>Engineering Workshop</h3>
-                <p>Join our workshop on robotics and automation this weekend.</p>
-            </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="news-card">
-            <img src="../assets/images/orientation.jpg" alt="News 2">
-            <div class="card-content">
-                <h3>Research Conference</h3>
-                <p>FUTO hosts annual research conference with industry leaders.</p>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="news-card">
-            <img src="../assets/images/orientation.jpg" alt="News 3">
-            <div class="card-content">
-                <h3>Project Expo</h3>
-                <p>Explore innovative student projects in mechanical engineering.</p>
-            </div>
-        </div>
-        <!-- Card 4 -->
-        <div class="news-card">
-            <img src="images/orientation.jpg" alt="News 3">
-            <div class="card-content">
-                <h3>Project Expo</h3>
-                <p>Explore innovative student projects in mechanical engineering.</p>
-            </div>
-        </div>
-
-            <!-- Card 5 -->
-        <div class="news-card">
-            <img src="../assets/images/orientation.jpg" alt="News 3">
-            <div class="card-content">
-                <h3>Project Expo</h3>
-                <p>Explore innovative student projects in mechanical engineering.</p>
-            </div>
-        </div>
-        <!-- Add more cards as needed -->
-    </div>
-
-    <div class="view-more-container">
-        <a href="event2.html" class="view-more">View More</a>
-    </div>
-</section>
-
-      <!--   ENGINEERING PROJECT-->
-                
-                   
-<section class="engineering-project">
-    <div>
-        <ul class="project-link">
-            <li><a href="#">My project</a></li>
-            <li><a href="#">Project guide</a></li>
-        </ul>
-
-        <div class="project-container">
-
-            <div class="project-card">
-                <img src="../assets/images/Mechconnect.jpeg" alt="FUTO Mechanical Engineering" class="img-project">
-                <h4 class="project_name">Automatic Fire Detection</h4>
-                <p class="project_creator">Created by: MORKAH CHIEMERIE JOSHUA</p>
-                <p class="creator_level">Level: 400L</p>
-                <p class="project_info">
-                    Detects heat/smoke and activates a sprinkler or extinguisher.
-                    Enhances building safety.
-                </p>
-                <a href="#project1" class="project-btn">Read More</a>
-            </div>
-
-            <div class="project-card">
-                <img src="../assets/images/Mechconnect.jpeg" alt="FUTO Mechanical Engineering" class="img-project">
-                <h4 class="project_name">Automatic Fire Detection</h4>
-                <p class="project_creator">Created by: MORKAH CHIEMERIE JOSHUA</p>
-                <p class="creator_level">Level: 400L</p>
-                <p class="project_info">
-                    Detects heat/smoke and activates a sprinkler or extinguisher.
-                    Enhances building safety.
-                </p>
-                <a href="#project1" class="project-btn">Read More</a>
-            </div>
-
-            <div class="project-card">
-                <img src="../assets/images/Mechconnect.jpeg" alt="FUTO Mechanical Engineering" class="img-project">
-                <h4 class="project_name">Automatic Fire Detection</h4>
-                <p class="project_creator">Created by: MORKAH CHIEMERIE JOSHUA</p>
-                <p class="creator_level">Level: 400L</p>
-                <p class="project_info">
-                    Detects heat/smoke and activates a sprinkler or extinguisher.
-                    Enhances building safety.
-                </p>
-                <a href="#project1" class="project-btn">Read More</a>
-            </div>
-
-        </div>
-
-        <div class="view-more-container">
-            <button class="view-more"><a href="project2.html" >View More</a></button>
-        </div>
-    </div>
-</section>
-
-<section class="academic-resources">
-  <h2>Academic Resources</h2>
-  <div class="cards-container">
-    <div class="card">
-      <h3>Academic Courses</h3>
-      <p>Explore all available courses and their details.</p>
-      <button>View Courses</button>
-    </div>
-    <div class="card">
-      <h3>Past Questions</h3>
-      <p>Access previous exams to practice and prepare.</p>
-      <button>View Questions</button>
-    </div>
-  </div>
-</section>
-
-
-<div class="dashboard-card skills-hub-card">
-  <div class="card-header">
-    <h3>Mechanical Engineering Skills Hub</h3>
-    <p>Develop core and digital engineering skills</p>
-  </div>
-
-  <div class="skills-grid">
-    <div class="skill-item">
-      <span class="skill-title">Design & CAD</span>
-      <span class="skill-desc">3D modeling & assemblies</span>
-    </div>
-
-    <div class="skill-item">
-      <span class="skill-title">Simulation</span>
-      <span class="skill-desc">Stress, thermal & flow analysis</span>
-    </div>
-
-    <div class="skill-item">
-      <span class="skill-title">Programming</span>
-      <span class="skill-desc">Python & engineering logic</span>
-    </div>
-
-    <div class="skill-item">
-      <span class="skill-title">Workshop Skills</span>
-      <span class="skill-desc">Machining & tool handling</span>
-    </div>
-  </div>
-</div>
-
-<script src="../js/auth-guard.js"></script>
-<script src="script.js"></script>
-
+    // ===== LOGOUT =====
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "../../index.html";
+    }
+  </script>
 
 </body>
-<html>
+</html>

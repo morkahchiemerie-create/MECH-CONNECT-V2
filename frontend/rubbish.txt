@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Past Questions</title>
+</head>
+<body>
+
+<h1>Past Questions Page</h1>
+
+<h2 id="courseCode"></h2>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+

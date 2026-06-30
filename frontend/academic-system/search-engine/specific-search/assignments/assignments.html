@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Academic Assignments Search</title>
+
+    <link rel="stylesheet"
+          href="assignments.css">
+
+</head>
+<body>
+
+    <div class="container">
+
+    <!-- PAGE TITLE -->
+    <h1>Academic Assignments</h1>
+
+    <!-- COURSE CODE -->
+    <h2 id="courseCode"></h2>
+
+
+    <!-- =========================
+    SEARCH BOX
+    ========================= -->
+    <div class="search-box">
+
+        <i class="fas fa-search"></i>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search Academic Assignments by title or keyword..."
+        >
+
+    </div>
+
+
+    <!-- =========================
+    FILTERS
+    ========================= -->
+    <div class="filter-row">
+
+        <!-- YEAR -->
+        <select id="yearFilter">
+
+            <option value="all">
+                Years
+            </option>
+
+        </select>
+
+
+        <!-- SORT -->
+        <select id="sortFilter">
+
+            <option value="newest">
+                Newest First
+            </option>
+
+            <option value="oldest">
+                Oldest First
+            </option>
+
+            <option value="az">
+                A - Z
+            </option>
+
+            <option value="za">
+                Z - A
+            </option>
+
+            <option value="largest">
+                Largest File
+            </option>
+
+            <option value="smallest">
+                Smallest File
+            </option>
+
+            <option value="downloads">
+                Most Downloaded
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- RESULTS COUNT -->
+    <div id="resultsCount">
+
+        Showing 0 files
+
+    </div>
+
+
+    <!-- =========================
+    FILES
+    ========================= -->
+    <div id="resultsContainer">
+
+    </div>
+
+</div>
+    <script src="assignments.js"></script>
+
+</body>
+</html>

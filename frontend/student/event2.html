@@ -1,247 +1,1399 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Department News & Events</title>
-    
-    
-    
- <link rel="stylesheet" href="style.css">
- <link rel="stylesheet" href="event2.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MECHCONNECT - Student Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Custom styles and animations */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .dark body {
+            background: #0a0e17;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Smooth transitions */
+        .transition-all {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+        .dark .card-hover:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Sidebar active state */
+        .nav-item-active {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .dark .nav-item-active {
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Notification badge pulse */
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Loading shimmer */
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        /* Dark mode overrides */
+        .dark .bg-white { background: #1a1f2e; }
+        .dark .bg-gray-50 { background: #0d1117; }
+        .dark .bg-gray-100 { background: #161b22; }
+        .dark .text-gray-600 { color: #9ca3af; }
+        .dark .text-gray-700 { color: #d1d5db; }
+        .dark .text-gray-800 { color: #e5e7eb; }
+        .dark .text-gray-900 { color: #f3f4f6; }
+        .dark .border-gray-200 { border-color: #2d3748; }
+        .dark .border-gray-300 { border-color: #374151; }
+        .dark .hover\:bg-gray-50:hover { background: #1f2937; }
+        .dark .hover\:bg-gray-100:hover { background: #2d3748; }
+        
+        /* Mobile menu overlay */
+        .sidebar-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Custom scroll for sidebar */
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        
+        /* Resource card image placeholder */
+        .resource-icon {
+            background: linear-gradient(135deg, #dbeafe, #ede9fe);
+        }
+        .dark .resource-icon {
+            background: linear-gradient(135deg, #1e293b, #2d1b69);
+        }
+        
+        /* Progress bar animation */
+        .progress-bar {
+            transition: width 1s ease-in-out;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 50;
+        }
+        
+        /* Calendar grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .calendar-day:hover {
+            background: #e5e7eb;
+        }
+        .dark .calendar-day:hover {
+            background: #374151;
+        }
+        .calendar-day.today {
+            background: #2563eb;
+            color: white;
+        }
+        .calendar-day.has-event {
+            position: relative;
+        }
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+    </style>
 </head>
 <body>
+    <div id="root"></div>
 
-<div id="header-container"></div>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } = React;
 
-    <div class="container">
-        <!-- Header Section -->
-        <div class="header">
-            <h1>Department News & Events</h1>
-            <p>Stay updated with the latest announcements, deadlines, and activities</p>
-        </div>
+        // ============================================================
+        // DATA LAYER
+        // ============================================================
 
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <div class="filter-label">Filter by Category</div>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All News</button>
-                <button class="filter-btn" data-filter="academic">Academic</button>
-                <button class="filter-btn" data-filter="department">Department</button>
-                <button class="filter-btn" data-filter="event">Event</button>
-            </div>
-        </div>
+        // Mock User Data
+        const CURRENT_USER = {
+            id: 'STU-001',
+            name: 'Chidi Okonkwo',
+            email: 'chidi.okonkwo@futo.edu.ng',
+            department: 'Mechanical Engineering',
+            level: '400 Level',
+            semester: 'First Semester',
+            avatar: 'https://ui-avatars.com/api/?name=Chidi+Okonkwo&background=2563eb&color=fff&size=128',
+            matricNo: 'FUTO/ME/2021/001',
+            cgpa: 3.82,
+            totalCredits: 124,
+            completedCourses: 32
+        };
 
-        <!-- Priority Buttons Section -->
-        <div class="priority-section">
-            <div class="priority-buttons">
-                <button class="priority-btn important" data-priority="important">Important News</button>
-                <button class="priority-btn new" data-priority="new">New News</button>
-            </div>
-        </div>
+        // Mock Data
+        const MOCK_DATA = {
+            announcements: [
+                { id: 1, title: '📢 Departmental Seminar: "Advances in Renewable Energy"', content: 'All 400-level students are required to attend the seminar on Friday, July 15th at 10:00 AM in the Engineering Lecture Theatre.', date: '2026-07-12', priority: 'high', postedBy: 'Dr. Adebayo' },
+                { id: 2, title: '📝 Registration Deadline Extension', content: 'The deadline for course registration has been extended to July 20th, 2026. Ensure you complete your registration before the new deadline.', date: '2026-07-10', priority: 'medium', postedBy: 'Department Admin' },
+                { id: 3, title: '🏆 Shell Engineering Competition 2026', content: 'Applications are now open for the Shell Engineering Competition. Interested students should submit proposals by July 30th.', date: '2026-07-08', priority: 'low', postedBy: 'Dean\'s Office' },
+                { id: 4, title: '💰 Scholarship Opportunity: NNPC/SNEPCo', content: 'The NNPC/SNEPCo National Merit Scholarship is now open for 300-400 level students. Apply before August 15th.', date: '2026-07-05', priority: 'high', postedBy: 'Scholarship Office' }
+            ],
+            todayLectures: [
+                { id: 1, course: 'MEE 401 - Thermodynamics', time: '09:00 - 11:00', venue: 'LT B', lecturer: 'Prof. Nwachukwu' },
+                { id: 2, course: 'MEE 403 - Fluid Mechanics', time: '12:00 - 14:00', venue: 'LT D', lecturer: 'Dr. Okafor' },
+                { id: 3, course: 'MEE 405 - Machine Design', time: '15:00 - 17:00', venue: 'Lab 3', lecturer: 'Engr. Eze' }
+            ],
+            upcomingDeadlines: [
+                { id: 1, title: 'Thermodynamics Assignment', course: 'MEE 401', due: '2026-07-14', daysLeft: 2, priority: 'high' },
+                { id: 2, title: 'Fluid Mechanics Lab Report', course: 'MEE 403', due: '2026-07-16', daysLeft: 4, priority: 'medium' },
+                { id: 3, title: 'Machine Design Project', course: 'MEE 405', due: '2026-07-20', daysLeft: 8, priority: 'medium' },
+                { id: 4, title: 'Research Proposal Draft', course: 'Final Year Project', due: '2026-07-25', daysLeft: 13, priority: 'low' }
+            ],
+            resources: {
+                pastQuestions: [
+                    { id: 1, title: 'MEE 401 - Thermodynamics (2023/24)', type: 'PDF', course: 'MEE 401', year: '2023', downloads: 234, uploader: 'Dr. Nwachukwu' },
+                    { id: 2, title: 'MEE 403 - Fluid Mechanics (2022/23)', type: 'PDF', course: 'MEE 403', year: '2022', downloads: 189, uploader: 'Dr. Okafor' },
+                    { id: 3, title: 'MEE 405 - Machine Design (2023/24)', type: 'PDF', course: 'MEE 405', year: '2023', downloads: 156, uploader: 'Engr. Eze' },
+                    { id: 4, title: 'MEE 402 - Dynamics (2021/22)', type: 'PDF', course: 'MEE 402', year: '2021', downloads: 98, uploader: 'Prof. Okonkwo' }
+                ],
+                lectureNotes: [
+                    { id: 5, title: 'Thermodynamics - Week 1 Notes', type: 'DOCX', course: 'MEE 401', year: '2026', downloads: 78, uploader: 'Chidi Okonkwo' },
+                    { id: 6, title: 'Fluid Mechanics - Chapter 3 Notes', type: 'PDF', course: 'MEE 403', year: '2026', downloads: 45, uploader: 'Amara Eze' }
+                ],
+                projects: [
+                    { id: 7, title: 'Design of a Solar-Powered Water Pump', type: 'PDF', course: 'Final Year', year: '2024', downloads: 120, uploader: 'Oluwaseun Adeyemi' },
+                    { id: 8, title: 'Analysis of Composite Materials in Aerospace', type: 'PDF', course: 'Final Year', year: '2024', downloads: 89, uploader: 'Nkechi Obi' }
+                ]
+            },
+            studyGroups: [
+                { id: 1, name: 'Thermodynamics Study Group', course: 'MEE 401', members: 12, maxMembers: 20, description: 'Weekly problem-solving sessions for MEE 401 students.' },
+                { id: 2, name: 'Fluid Mechanics Lab Prep', course: 'MEE 403', members: 8, maxMembers: 15, description: 'Preparing for fluid mechanics lab practicals.' },
+                { id: 3, name: 'Machine Design Project Team', course: 'MEE 405', members: 5, maxMembers: 10, description: 'Collaborative project work on machine design.' }
+            ],
+            qaPosts: [
+                { id: 1, title: 'How to solve the entropy problem in MEE 401?', author: 'Chidi Okonkwo', course: 'MEE 401', replies: 5, likes: 12, time: '2 hours ago' },
+                { id: 2, title: 'Best materials for machine design project?', author: 'Amara Eze', course: 'MEE 405', replies: 3, likes: 8, time: '5 hours ago' },
+                { id: 3, title: 'Tips for passing fluid mechanics exam', author: 'Oluwaseun Adeyemi', course: 'MEE 403', replies: 7, likes: 15, time: '1 day ago' }
+            ],
+            mentors: [
+                { id: 1, name: 'Dr. Chioma Nwachukwu', department: 'Mechanical Engineering', specialization: 'Thermodynamics', email: 'chioma.nwachukwu@futo.edu.ng', available: true },
+                { id: 2, name: 'Engr. Emeka Okafor', department: 'Mechanical Engineering', specialization: 'Fluid Mechanics', email: 'emeka.okafor@futo.edu.ng', available: true },
+                { id: 3, name: 'Prof. Adebayo Johnson', department: 'Mechanical Engineering', specialization: 'Machine Design', email: 'adebayo.johnson@futo.edu.ng', available: false }
+            ],
+            timetable: [
+                { day: 'Monday', courses: [{ time: '09:00-11:00', course: 'MEE 401 - Thermodynamics', venue: 'LT B' }, { time: '12:00-14:00', course: 'MEE 403 - Fluid Mechanics', venue: 'LT D' }] },
+                { day: 'Tuesday', courses: [{ time: '10:00-12:00', course: 'MEE 405 - Machine Design', venue: 'Lab 3' }, { time: '14:00-16:00', course: 'MEE 402 - Dynamics', venue: 'LT A' }] },
+                { day: 'Wednesday', courses: [{ time: '09:00-11:00', course: 'MEE 401 - Thermodynamics', venue: 'LT B' }] },
+                { day: 'Thursday', courses: [{ time: '11:00-13:00', course: 'MEE 403 - Fluid Mechanics', venue: 'LT D' }, { time: '15:00-17:00', course: 'MEE 405 - Machine Design', venue: 'Lab 3' }] },
+                { day: 'Friday', courses: [{ time: '09:00-11:00', course: 'MEE 402 - Dynamics', venue: 'LT A' }] }
+            ],
+            notifications: [
+                { id: 1, type: 'reminder', title: 'Thermodynamics Assignment Due', message: 'Your MEE 401 assignment is due tomorrow.', time: '2 hours ago', read: false },
+                { id: 2, type: 'announcement', title: 'New Past Questions Available', message: 'MEE 403 past questions for 2023/24 have been uploaded.', time: '4 hours ago', read: false },
+                { id: 3, type: 'message', title: 'New Message from Study Group', message: 'Amara Eze posted in Thermodynamics Study Group.', time: '1 day ago', read: true },
+                { id: 4, type: 'system', title: 'Profile Updated', message: 'Your profile information has been successfully updated.', time: '2 days ago', read: true }
+            ]
+        };
 
-        <!-- News Cards Section -->
-        <div class="news-section">
-            <div class="news-count">Showing <span id="newsCount">10</span> news items</div>
-            <div class="news-list" id="newsList"></div>
-        </div>
-    </div>
+        // ============================================================
+        // CONTEXT
+        // ============================================================
 
-    <script>
-        // Sample news data
-        const newsData = [
-            {
-                id: 1,
-                title: "Final Examination Schedule Released",
-                description: "The final examination timetable for Semester 2, 2025-26 is now available. Students are advised to check their exam dates and report any clashes within 48 hours.",
-                category: "academic",
-                date: "2026-02-04",
-                isImportant: true,
-                timestamp: new Date('2026-02-04T09:00:00'),
-                image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=400&fit=crop"
-            },
-            {
-                id: 2,
-                title: "Guest Lecture on Artificial Intelligence",
-                description: "Join us for an engaging session with Dr. Sarah Mitchell from MIT on 'The Future of AI in Healthcare' on February 10th at 3:00 PM in Auditorium B.",
-                category: "event",
-                date: "2026-02-03",
-                isImportant: false,
-                timestamp: new Date('2026-02-03T14:30:00'),
-                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop"
-            },
-            {
-                id: 3,
-                title: "New Computer Lab Inauguration",
-                description: "The department is pleased to announce the inauguration of a state-of-the-art computer lab equipped with 50 high-performance workstations on February 8th.",
-                category: "department",
-                date: "2026-02-03",
-                isImportant: false,
-                timestamp: new Date('2026-02-03T11:00:00'),
-                image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=400&fit=crop"
-            },
-            {
-                id: 4,
-                title: "Registration Deadline Extension",
-                description: "Course registration deadline has been extended to February 7th. Students who haven't completed registration must do so before the deadline to avoid late fees.",
-                category: "academic",
-                date: "2026-02-02",
-                isImportant: true,
-                timestamp: new Date('2026-02-02T16:00:00'),
-                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=400&fit=crop"
-            },
-            {
-                id: 5,
-                title: "Annual Technical Symposium 2026",
-                description: "Mark your calendars! TechFest 2026 will be held from March 15-17. Registration opens February 12th. Exciting prizes and workshops await!",
-                category: "event",
-                date: "2026-02-02",
-                isImportant: false,
-                timestamp: new Date('2026-02-02T10:00:00'),
-                image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=400&fit=crop"
-            },
-            {
-                id: 6,
-                title: "Head of Department Message",
-                description: "Prof. James Anderson shares his vision for the department's growth and welcomes suggestions from students for improving academic programs and facilities.",
-                category: "department",
-                date: "2026-02-01",
-                isImportant: false,
-                timestamp: new Date('2026-02-01T09:00:00'),
-                image: "https://images.unsplash.com/photo-1560439514-4e9645039924?w=800&h=400&fit=crop"
-            },
-            {
-                id: 7,
-                title: "Mid-Semester Results Published",
-                description: "Mid-semester examination results are now available on the student portal. Students scoring below 40% are required to meet their respective course instructors.",
-                category: "academic",
-                date: "2026-02-01",
-                isImportant: true,
-                timestamp: new Date('2026-02-01T08:00:00'),
-                image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop"
-            },
-            {
-                id: 8,
-                title: "Industry Workshop on Cloud Computing",
-                description: "Amazon Web Services is conducting a hands-on workshop on cloud architecture on February 14th. Limited seats available. Register by February 9th.",
-                category: "event",
-                date: "2026-01-31",
-                isImportant: false,
-                timestamp: new Date('2026-01-31T15:00:00'),
-                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop"
-            },
-            {
-                id: 9,
-                title: "Library Hours Extended During Exam Period",
-                description: "The department library will remain open until 11:00 PM starting February 15th to support students during the examination period.",
-                category: "department",
-                date: "2026-01-31",
-                isImportant: false,
-                timestamp: new Date('2026-01-31T12:00:00'),
-                image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=400&fit=crop"
-            },
-            {
-                id: 10,
-                title: "Lecture Rescheduling Notice",
-                description: "Advanced Database Systems lecture scheduled for February 6th has been rescheduled to February 8th at 2:00 PM in Room 304 due to faculty travel.",
-                category: "academic",
-                date: "2026-01-30",
-                isImportant: true,
-                timestamp: new Date('2026-01-30T17:00:00'),
-                image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&h=400&fit=crop"
+        const AppContext = createContext(null);
+
+        const AppProvider = ({ children }) => {
+            const [darkMode, setDarkMode] = useState(() => {
+                return localStorage.getItem('darkMode') === 'true' || 
+                       window.matchMedia('(prefers-color-scheme: dark)').matches;
+            });
+            const [currentPage, setCurrentPage] = useState('dashboard');
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            const [notifications, setNotifications] = useState(MOCK_DATA.notifications);
+            const [user, setUser] = useState(CURRENT_USER);
+
+            useEffect(() => {
+                localStorage.setItem('darkMode', darkMode);
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            const markNotificationRead = (id) => {
+                setNotifications(prev => 
+                    prev.map(n => n.id === id ? { ...n, read: true } : n)
+                );
+            };
+
+            const markAllNotificationsRead = () => {
+                setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+            };
+
+            const unreadCount = notifications.filter(n => !n.read).length;
+
+            const value = {
+                darkMode,
+                setDarkMode,
+                currentPage,
+                setCurrentPage,
+                sidebarOpen,
+                setSidebarOpen,
+                user,
+                notifications,
+                markNotificationRead,
+                markAllNotificationsRead,
+                unreadCount,
+                data: MOCK_DATA
+            };
+
+            return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+        };
+
+        const useApp = () => {
+            const context = useContext(AppContext);
+            if (!context) {
+                throw new Error('useApp must be used within AppProvider');
             }
+            return context;
+        };
+
+        // ============================================================
+        // ICON COMPONENTS
+        // ============================================================
+
+        const Icons = {
+            Dashboard: () => <i className="fas fa-th-large"></i>,
+            Learning: () => <i className="fas fa-book-open"></i>,
+            Collaboration: () => <i className="fas fa-users"></i>,
+            Organization: () => <i className="fas fa-calendar-check"></i>,
+            Services: () => <i className="fas fa-concierge-bell"></i>,
+            Toolkit: () => <i className="fas fa-tools"></i>,
+            Marketplace: () => <i className="fas fa-store"></i>,
+            Settings: () => <i className="fas fa-cog"></i>,
+            Search: () => <i className="fas fa-search"></i>,
+            Bell: () => <i className="fas fa-bell"></i>,
+            Envelope: () => <i className="fas fa-envelope"></i>,
+            User: () => <i className="fas fa-user-circle"></i>,
+            Logout: () => <i className="fas fa-sign-out-alt"></i>,
+            Menu: () => <i className="fas fa-bars"></i>,
+            Close: () => <i className="fas fa-times"></i>,
+            ChevronDown: () => <i className="fas fa-chevron-down"></i>,
+            ChevronRight: () => <i className="fas fa-chevron-right"></i>,
+            Plus: () => <i className="fas fa-plus"></i>,
+            Download: () => <i className="fas fa-download"></i>,
+            Bookmark: () => <i className="fas fa-bookmark"></i>,
+            Calendar: () => <i className="fas fa-calendar-alt"></i>,
+            Clock: () => <i className="fas fa-clock"></i>,
+            Users: () => <i className="fas fa-user-friends"></i>,
+            Message: () => <i className="fas fa-comment-dots"></i>,
+            GraduationCap: () => <i className="fas fa-graduation-cap"></i>,
+            File: () => <i className="fas fa-file-pdf"></i>,
+            Video: () => <i className="fas fa-video"></i>,
+            External: () => <i className="fas fa-external-link-alt"></i>,
+            Sun: () => <i className="fas fa-sun"></i>,
+            Moon: () => <i className="fas fa-moon"></i>
+        };
+
+        // ============================================================
+        // NAVIGATION CONFIG
+        // ============================================================
+
+        const NAV_ITEMS = [
+            { id: 'dashboard', label: 'Dashboard', icon: Icons.Dashboard },
+            { id: 'learning', label: 'Learning', icon: Icons.Learning },
+            { id: 'collaboration', label: 'Collaboration', icon: Icons.Collaboration },
+            { id: 'organization', label: 'Organization', icon: Icons.Organization },
+            { id: 'services', label: 'Services', icon: Icons.Services },
+            { id: 'toolkit', label: 'Toolkit', icon: Icons.Toolkit },
+            { id: 'marketplace', label: 'Marketplace', icon: Icons.Marketplace }
         ];
 
-        let currentFilter = 'all';
-        let currentPriority = null;
+        // ============================================================
+        // COMPONENTS
+        // ============================================================
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const options = { month: 'short', day: 'numeric', year: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        }
+        // ---- Sidebar ----
+        const Sidebar = () => {
+            const { darkMode, setDarkMode, currentPage, setCurrentPage, sidebarOpen, setSidebarOpen, user } = useApp();
 
-        function renderNews() {
-            let filteredNews = [...newsData];
+            return (
+                <>
+                    {/* Mobile Overlay */}
+                    {sidebarOpen && (
+                        <div 
+                            className="fixed inset-0 z-40 sidebar-overlay lg:hidden"
+                            onClick={() => setSidebarOpen(false)}
+                        ></div>
+                    )}
 
-            // Apply category filter
-            if (currentFilter !== 'all') {
-                filteredNews = filteredNews.filter(news => news.category === currentFilter);
-            }
+                    {/* Sidebar */}
+                    <aside className={`
+                        fixed top-0 left-0 z-50 h-full w-72 bg-white dark:bg-[#0d1117] border-r border-gray-200 dark:border-gray-800
+                        transform transition-transform duration-300 ease-in-out
+                        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                        lg:translate-x-0 lg:static lg:z-0
+                        flex flex-col
+                    `}>
+                        {/* Logo */}
+                        <div className="flex items-center justify-between px-6 h-20 border-b border-gray-200 dark:border-gray-800">
+                            <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                                    MC
+                                </div>
+                                <div>
+                                    <h1 className="text-xl font-bold gradient-text">MECHCONNECT</h1>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">v1.0</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setSidebarOpen(false)}
+                                className="lg:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            >
+                                <Icons.Close />
+                            </button>
+                        </div>
 
-            // Apply priority filter
-            if (currentPriority === 'important') {
-                filteredNews = filteredNews.filter(news => news.isImportant);
-            } else if (currentPriority === 'new') {
-                filteredNews.sort((a, b) => b.timestamp - a.timestamp);
-            }
+                        {/* User Profile */}
+                        <div className="px-4 py-4 border-b border-gray-200 dark:border-gray-800">
+                            <div className="flex items-center space-x-3">
+                                <img 
+                                    src={user.avatar} 
+                                    alt={user.name}
+                                    className="w-12 h-12 rounded-full ring-2 ring-blue-500/20"
+                                />
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-semibold text-gray-900 dark:text-white truncate">{user.name}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user.department}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500">{user.level} • {user.semester}</p>
+                                </div>
+                            </div>
+                        </div>
 
-            // Limit to 10 items
-            filteredNews = filteredNews.slice(0, 10);
+                        {/* Navigation */}
+                        <nav className="flex-1 overflow-y-auto py-4 px-3 sidebar-scroll">
+                            {NAV_ITEMS.map(item => {
+                                const isActive = currentPage === item.id;
+                                return (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => {
+                                            setCurrentPage(item.id);
+                                            setSidebarOpen(false);
+                                        }}
+                                        className={`
+                                            w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
+                                            ${isActive 
+                                                ? 'nav-item-active' 
+                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                            }
+                                        `}
+                                    >
+                                        <span className="text-lg">{item.icon()}</span>
+                                        <span className="font-medium">{item.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </nav>
 
-            const newsList = document.getElementById('newsList');
-            const newsCount = document.getElementById('newsCount');
-            newsCount.textContent = filteredNews.length;
+                        {/* Bottom Actions */}
+                        <div className="border-t border-gray-200 dark:border-gray-800 p-4 space-y-2">
+                            <button
+                                onClick={() => setDarkMode(!darkMode)}
+                                className="w-full flex items-center space-x-3 px-4 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                            >
+                                {darkMode ? <Icons.Sun /> : <Icons.Moon />}
+                                <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                            </button>
+                            <button className="w-full flex items-center space-x-3 px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all">
+                                <Icons.Logout />
+                                <span>Sign Out</span>
+                            </button>
+                        </div>
+                    </aside>
+                </>
+            );
+        };
 
-            if (filteredNews.length === 0) {
-                newsList.innerHTML = `
-                    <div class="no-results">
-                        <div class="no-results-icon">📭</div>
-                        <div class="no-results-text">No news items found</div>
-                        <div class="no-results-subtext">Try adjusting your filters</div>
+        // ---- Top Bar ----
+        const TopBar = () => {
+            const { setSidebarOpen, user, unreadCount, notifications, markNotificationRead, markAllNotificationsRead } = useApp();
+            const [showNotifications, setShowNotifications] = useState(false);
+            const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+            return (
+                <header className="sticky top-0 z-30 bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800">
+                    <div className="flex items-center justify-between px-4 h-16">
+                        {/* Left */}
+                        <div className="flex items-center space-x-4">
+                            <button
+                                onClick={() => setSidebarOpen(true)}
+                                className="lg:hidden text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            >
+                                <Icons.Menu />
+                            </button>
+                            <div className="hidden md:flex items-center relative">
+                                <Icons.Search />
+                                <input 
+                                    type="text" 
+                                    placeholder="Search for courses, resources, people..."
+                                    className="ml-2 w-80 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Right */}
+                        <div className="flex items-center space-x-2">
+                            {/* Notifications */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowNotifications(!showNotifications)}
+                                    className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                                >
+                                    <Icons.Bell />
+                                    {unreadCount > 0 && (
+                                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center badge-pulse">
+                                            {unreadCount}
+                                        </span>
+                                    )}
+                                </button>
+
+                                {/* Notification Dropdown */}
+                                {showNotifications && (
+                                    <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-[#1a1f2e] rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden z-50">
+                                        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+                                            <h3 className="font-semibold">Notifications</h3>
+                                            {unreadCount > 0 && (
+                                                <button 
+                                                    onClick={markAllNotificationsRead}
+                                                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                >
+                                                    Mark all read
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="max-h-96 overflow-y-auto">
+                                            {notifications.length === 0 ? (
+                                                <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                                    <Icons.Bell />
+                                                    <p className="mt-2">No notifications</p>
+                                                </div>
+                                            ) : (
+                                                notifications.map(n => (
+                                                    <div 
+                                                        key={n.id}
+                                                        onClick={() => markNotificationRead(n.id)}
+                                                        className={`
+                                                            px-4 py-3 border-b border-gray-100 dark:border-gray-800 cursor-pointer
+                                                            hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all
+                                                            ${!n.read ? 'bg-blue-50 dark:bg-blue-950/20' : ''}
+                                                        `}
+                                                    >
+                                                        <div className="flex items-start space-x-3">
+                                                            <div className={`
+                                                                w-2 h-2 rounded-full mt-2 flex-shrink-0
+                                                                ${!n.read ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}
+                                                            `}></div>
+                                                            <div>
+                                                                <p className="font-medium text-sm">{n.title}</p>
+                                                                <p className="text-sm text-gray-600 dark:text-gray-400">{n.message}</p>
+                                                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{n.time}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                        <div className="px-4 py-2 border-t border-gray-200 dark:border-gray-800 text-center">
+                                            <button className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                                View all notifications
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Messages */}
+                            <button className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all relative">
+                                <Icons.Envelope />
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                                    3
+                                </span>
+                            </button>
+
+                            {/* Profile */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                                    className="flex items-center space-x-2 p-1 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+                                >
+                                    <img 
+                                        src={user.avatar} 
+                                        alt={user.name}
+                                        className="w-8 h-8 rounded-full"
+                                    />
+                                    <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        {user.name.split(' ')[0]}
+                                    </span>
+                                    <Icons.ChevronDown />
+                                </button>
+
+                                {showProfileMenu && (
+                                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#1a1f2e] rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden z-50">
+                                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+                                            <p className="font-medium">{user.name}</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                                        </div>
+                                        <div className="py-2">
+                                            <button className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center space-x-3">
+                                                <Icons.User />
+                                                <span>My Profile</span>
+                                            </button>
+                                            <button className="w-full px-4 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center space-x-3">
+                                                <Icons.Settings />
+                                                <span>Settings</span>
+                                            </button>
+                                            <hr className="my-1 border-gray-200 dark:border-gray-800" />
+                                            <button className="w-full px-4 py-2 text-left text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all flex items-center space-x-3">
+                                                <Icons.Logout />
+                                                <span>Sign Out</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                `;
-                return;
-            }
+                </header>
+            );
+        };
 
-            newsList.innerHTML = filteredNews.map(news => `
-                <div class="news-card ${news.isImportant ? 'important' : ''}">
-                    <img src="${news.image}" alt="${news.title}">
-                    <div class="news-card-content">
-                        <span class="category-badge ${news.category}">${news.category}</span>
-                        <h3>${news.title}</h3>
-                        <p>${news.description}</p>
-                        <div class="news-date">${formatDate(news.date)}</div>
-                        <a href="#">Read More →</a>
+        // ---- Dashboard Page ----
+        const DashboardPage = () => {
+            const { user, data } = useApp();
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+            // Quick Stats
+            const stats = [
+                { label: 'CGPA', value: user.cgpa, icon: 'fa-graduation-cap', color: 'blue' },
+                { label: 'Credits', value: user.totalCredits, icon: 'fa-book', color: 'green' },
+                { label: 'Courses', value: user.completedCourses, icon: 'fa-check-circle', color: 'purple' },
+                { label: 'Resources', value: data.resources.pastQuestions.length + data.resources.lectureNotes.length + data.resources.projects.length, icon: 'fa-file', color: 'orange' }
+            ];
+
+            return (
+                <div className="p-4 md:p-6 space-y-6">
+                    {/* Hero Section */}
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 p-6 md:p-8 text-white">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
+                        
+                        <div className="relative z-10">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div>
+                                    <p className="text-blue-100 text-sm">Welcome back,</p>
+                                    <h1 className="text-3xl md:text-4xl font-bold">{user.name}</h1>
+                                    <div className="flex flex-wrap items-center gap-4 mt-2 text-blue-100">
+                                        <span className="flex items-center gap-1">
+                                            <i className="fas fa-university"></i> {user.department}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <i className="fas fa-layer-group"></i> {user.level}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <i className="fas fa-calendar-alt"></i> {user.semester}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <i className="fas fa-id-card"></i> {user.matricNo}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all text-sm flex items-center gap-2">
+                                        <i className="fas fa-calendar-alt"></i> Timetable
+                                    </button>
+                                    <button className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all text-sm flex items-center gap-2">
+                                        <i className="fas fa-plus"></i> Quick Action
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {stats.map((stat, idx) => (
+                            <div key={idx} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+                                    </div>
+                                    <div className={`w-10 h-10 rounded-xl bg-${stat.color}-100 dark:bg-${stat.color}-900/20 flex items-center justify-center text-${stat.color}-600 dark:text-${stat.color}-400`}>
+                                        <i className={`fas ${stat.icon}`}></i>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Left Column - 2/3 */}
+                        <div className="lg:col-span-2 space-y-6">
+                            {/* Today's Lectures */}
+                            <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                        <Icons.Calendar />
+                                        Today's Lectures
+                                    </h2>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">{dateStr}</span>
+                                </div>
+                                <div className="space-y-3">
+                                    {data.todayLectures.map((lecture, idx) => (
+                                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                            <div>
+                                                <p className="font-medium text-gray-900 dark:text-white">{lecture.course}</p>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    <i className="fas fa-user mr-1"></i> {lecture.lecturer}
+                                                </p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{lecture.time}</p>
+                                                <p className="text-xs text-gray-400 dark:text-gray-500">{lecture.venue}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Upcoming Deadlines */}
+                            <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <i className="fas fa-clock text-red-500"></i>
+                                    Upcoming Deadlines
+                                </h2>
+                                <div className="space-y-3">
+                                    {data.upcomingDeadlines.map((deadline, idx) => (
+                                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                            <div>
+                                                <p className="font-medium text-gray-900 dark:text-white">{deadline.title}</p>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">{deadline.course}</p>
+                                            </div>
+                                            <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                                deadline.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                                                deadline.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                                'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                            }`}>
+                                                {deadline.daysLeft} days left
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Column - 1/3 */}
+                        <div className="space-y-6">
+                            {/* Department News */}
+                            <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <i className="fas fa-newspaper text-blue-500"></i>
+                                    Department News
+                                </h2>
+                                <div className="space-y-3">
+                                    {data.announcements.slice(0, 3).map((ann, idx) => (
+                                        <div key={idx} className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                            <p className="font-medium text-sm text-gray-900 dark:text-white">{ann.title}</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{ann.content}</p>
+                                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">{ann.date}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button className="mt-3 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                    View all announcements →
+                                </button>
+                            </div>
+
+                            {/* Quick Stats */}
+                            <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Stats</h2>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-xl">
+                                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{data.resources.pastQuestions.length}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Past Qs</p>
+                                    </div>
+                                    <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-xl">
+                                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">{data.studyGroups.length}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Groups</p>
+                                    </div>
+                                    <div className="text-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-xl">
+                                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{data.qaPosts.length}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Q&A</p>
+                                    </div>
+                                    <div className="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-xl">
+                                        <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{data.mentors.length}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">Mentors</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            `).join('');
-        }
+            );
+        };
 
-        // Filter button handlers
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.getAttribute('data-filter');
-                currentPriority = null;
-                document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
-                renderNews();
-            });
-        });
+        // ---- Learning Page ----
+        const LearningPage = () => {
+            const { data } = useApp();
+            const [activeTab, setActiveTab] = useState('pastQuestions');
 
-        // Priority button handlers
-        document.querySelectorAll('.priority-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const priority = this.getAttribute('data-priority');
-                
-                if (currentPriority === priority) {
-                    currentPriority = null;
-                    this.classList.remove('active');
-                } else {
-                    document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentPriority = priority;
+            const tabs = [
+                { id: 'pastQuestions', label: 'Past Questions', icon: 'fa-file-pdf' },
+                { id: 'lectureNotes', label: 'Lecture Notes', icon: 'fa-file-alt' },
+                { id: 'projects', label: 'Projects', icon: 'fa-project-diagram' }
+            ];
+
+            const getResources = () => {
+                switch(activeTab) {
+                    case 'pastQuestions': return data.resources.pastQuestions;
+                    case 'lectureNotes': return data.resources.lectureNotes;
+                    case 'projects': return data.resources.projects;
+                    default: return [];
                 }
-                
-                renderNews();
-            });
-        });
+            };
 
-        // Initial render
-        renderNews();
+            return (
+                <div className="p-4 md:p-6 space-y-6">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Academic Resources</h1>
+                        <p className="text-gray-500 dark:text-gray-400">Access past questions, lecture notes, and project materials</p>
+                    </div>
+
+                    {/* Tabs */}
+                    <div className="flex gap-2 bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`
+                                    px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2
+                                    ${activeTab === tab.id 
+                                        ? 'bg-white dark:bg-[#1a1f2e] shadow-sm text-gray-900 dark:text-white' 
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                    }
+                                `}
+                            >
+                                <i className={`fas ${tab.icon}`}></i>
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Resource Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {getResources().map(res => (
+                            <div key={res.id} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 rounded-xl resource-icon flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                            <i className={`fas fa-file-${res.type === 'PDF' ? 'pdf' : res.type === 'DOCX' ? 'word' : 'alt'} text-2xl`}></i>
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">{res.title}</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">{res.course} • {res.year}</p>
+                                        </div>
+                                    </div>
+                                    <button className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all">
+                                        <i className="fas fa-bookmark"></i>
+                                    </button>
+                                </div>
+                                <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                        <i className="fas fa-download mr-1"></i> {res.downloads}
+                                    </span>
+                                    <button className="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all flex items-center gap-1">
+                                        <i className="fas fa-download"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Upload Section */}
+                    <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 border-dashed">
+                        <div className="text-center">
+                            <div className="w-16 h-16 mx-auto rounded-full bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
+                                <i className="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">Share Your Resources</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Upload past questions, notes, or project materials to help fellow students</p>
+                            <button className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all flex items-center gap-2 mx-auto">
+                                <i className="fas fa-upload"></i> Upload Resource
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ---- Collaboration Page ----
+        const CollaborationPage = () => {
+            const { data } = useApp();
+            const [activeTab, setActiveTab] = useState('studyGroups');
+
+            const tabs = [
+                { id: 'studyGroups', label: 'Study Groups', icon: 'fa-users' },
+                { id: 'qa', label: 'Q&A', icon: 'fa-question-circle' },
+                { id: 'mentorship', label: 'Mentorship', icon: 'fa-handshake' }
+            ];
+
+            return (
+                <div className="p-4 md:p-6 space-y-6">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Collaboration Hub</h1>
+                        <p className="text-gray-500 dark:text-gray-400">Connect, learn, and grow with your peers</p>
+                    </div>
+
+                    <div className="flex gap-2 bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl overflow-x-auto">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`
+                                    px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 whitespace-nowrap
+                                    ${activeTab === tab.id 
+                                        ? 'bg-white dark:bg-[#1a1f2e] shadow-sm text-gray-900 dark:text-white' 
+                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                    }
+                                `}
+                            >
+                                <i className={`fas ${tab.icon}`}></i>
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {activeTab === 'studyGroups' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {data.studyGroups.map(group => (
+                                <div key={group.id} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover">
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <h3 className="font-bold text-gray-900 dark:text-white">{group.name}</h3>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{group.course}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{group.description}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                {group.members}/{group.maxMembers}
+                                            </p>
+                                            <p className="text-xs text-gray-400 dark:text-gray-500">Members</p>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 flex gap-2">
+                                        <button className="flex-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-all">
+                                            Join Group
+                                        </button>
+                                        <button className="px-3 py-1.5 border border-gray-300 dark:border-gray-700 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                                            <i className="fas fa-comment"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 border-dashed flex items-center justify-center min-h-[150px]">
+                                <button className="text-center">
+                                    <div className="w-12 h-12 mx-auto rounded-full bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xl">
+                                        <i className="fas fa-plus"></i>
+                                    </div>
+                                    <p className="mt-2 font-medium text-gray-700 dark:text-gray-300">Create Study Group</p>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'qa' && (
+                        <div className="space-y-4">
+                            {data.qaPosts.map(post => (
+                                <div key={post.id} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-bold text-gray-900 dark:text-white">{post.title}</h3>
+                                                <span className="text-xs px-2 py-0.5 bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 rounded-full">
+                                                    {post.course}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                <span><i className="fas fa-user mr-1"></i> {post.author}</span>
+                                                <span><i className="fas fa-clock mr-1"></i> {post.time}</span>
+                                                <span><i className="fas fa-reply mr-1"></i> {post.replies} replies</span>
+                                                <span><i className="fas fa-heart mr-1 text-red-500"></i> {post.likes}</span>
+                                            </div>
+                                        </div>
+                                        <button className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-all">
+                                            Reply
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            <button className="w-full py-3 bg-white dark:bg-[#1a1f2e] rounded-2xl border border-gray-200 dark:border-gray-800 border-dashed text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-all">
+                                <i className="fas fa-plus mr-2"></i> Ask a Question
+                            </button>
+                        </div>
+                    )}
+
+                    {activeTab === 'mentorship' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {data.mentors.map(mentor => (
+                                <div key={mentor.id} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover text-center">
+                                    <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-950/30 dark:to-purple-950/30 flex items-center justify-center text-3xl font-bold text-blue-600 dark:text-blue-400">
+                                        {mentor.name.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                    <h3 className="mt-3 font-bold text-gray-900 dark:text-white">{mentor.name}</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{mentor.specialization}</p>
+                                    <div className={`mt-2 text-sm ${mentor.available ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                                        <i className={`fas ${mentor.available ? 'fa-circle' : 'fa-circle'}`}></i>
+                                        {mentor.available ? ' Available' : ' Unavailable'}
+                                    </div>
+                                    <button className={`mt-3 w-full px-4 py-2 rounded-lg text-sm transition-all ${mentor.available ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'}`}>
+                                        {mentor.available ? 'Request Mentorship' : 'Not Available'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ---- Organization Page ----
+        const OrganizationPage = () => {
+            const { data } = useApp();
+            const [view, setView] = useState('timetable');
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+            // Generate calendar days for current month
+            const generateCalendar = () => {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = today.getMonth();
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const days = [];
+                for (let i = 0; i < firstDay; i++) {
+                    days.push(null);
+                }
+                for (let i = 1; i <= daysInMonth; i++) {
+                    days.push(i);
+                }
+                return days;
+            };
+
+            const calendarDays = generateCalendar();
+            const today = new Date().getDate();
+
+            return (
+                <div className="p-4 md:p-6 space-y-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Organization</h1>
+                            <p className="text-gray-500 dark:text-gray-400">Manage your timetable, tasks, and academic calendar</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setView('timetable')}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'timetable' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}
+                            >
+                                Timetable
+                            </button>
+                            <button 
+                                onClick={() => setView('calendar')}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'calendar' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}
+                            >
+                                Calendar
+                            </button>
+                        </div>
+                    </div>
+
+                    {view === 'timetable' ? (
+                        <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 overflow-x-auto">
+                            <div className="min-w-[600px]">
+                                <div className="grid grid-cols-5 gap-2 mb-3">
+                                    {days.map(day => (
+                                        <div key={day} className="text-center font-bold text-gray-700 dark:text-gray-300 py-2 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                            {day}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="grid grid-cols-5 gap-2">
+                                    {days.map((day, idx) => {
+                                        const dayData = data.timetable.find(t => t.day === day);
+                                        return (
+                                            <div key={idx} className="min-h-[200px] p-2 bg-gray-50 dark:bg-gray-800/30 rounded-xl">
+                                                {dayData && dayData.courses.map((course, cIdx) => (
+                                                    <div key={cIdx} className="mb-2 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                                                        <p className="text-xs font-medium text-gray-800 dark:text-gray-200">{course.course}</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{course.time}</p>
+                                                        <p className="text-xs text-gray-400 dark:text-gray-500">{course.venue}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="font-bold text-gray-900 dark:text-white">
+                                    {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                </h3>
+                                <div className="flex gap-2">
+                                    <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all">
+                                        <i className="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all">
+                                        <i className="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="calendar-grid">
+                                {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
+                                    <div key={d} className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 py-2">
+                                        {d}
+                                    </div>
+                                ))}
+                                {calendarDays.map((day, idx) => (
+                                    <div 
+                                        key={idx} 
+                                        className={`calendar-day ${day === today ? 'today' : ''} ${day !== null && day % 5 === 0 ? 'has-event' : ''}`}
+                                    >
+                                        {day || ''}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                <h4 className="font-medium text-sm text-gray-700 dark:text-gray-300">Today's Tasks</h4>
+                                <div className="mt-2 space-y-1">
+                                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                        <input type="checkbox" className="rounded" />
+                                        <span>Review Thermodynamics notes</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                        <input type="checkbox" className="rounded" />
+                                        <span>Complete Fluid Mechanics lab report</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                        <input type="checkbox" className="rounded" />
+                                        <span>Prepare for Machine Design quiz</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ---- Services Page ----
+        const ServicesPage = () => {
+            const services = [
+                { id: 1, name: 'Department Dues', icon: 'fa-money-bill-wave', color: 'green', description: 'View and pay your departmental dues' },
+                { id: 2, name: 'Transcript Request', icon: 'fa-file-alt', color: 'blue', description: 'Request your academic transcript' },
+                { id: 3, name: 'Clearance Information', icon: 'fa-check-circle', color: 'purple', description: 'View clearance requirements and status' },
+                { id: 4, name: 'Department Forms', icon: 'fa-forms', color: 'orange', description: 'Access and submit departmental forms' },
+                { id: 5, name: 'Registration Info', icon: 'fa-clipboard-list', color: 'red', description: 'Course registration guidelines and deadlines' },
+                { id: 6, name: 'Department Documents', icon: 'fa-folder-open', color: 'indigo', description: 'Important departmental documents and policies' }
+            ];
+
+            return (
+                <div className="p-4 md:p-6 space-y-6">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Department Services</h1>
+                        <p className="text-gray-500 dark:text-gray-400">Access all departmental services and information</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {services.map(service => (
+                            <div key={service.id} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover">
+                                <div className={`w-12 h-12 rounded-xl bg-${service.color}-100 dark:bg-${service.color}-900/20 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-400 text-xl`}>
+                                    <i className={`fas ${service.icon}`}></i>
+                                </div>
+                                <h3 className="mt-3 font-bold text-gray-900 dark:text-white">{service.name}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{service.description}</p>
+                                <button className="mt-3 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
+                                    Access →
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Department Announcements */}
+                    <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800">
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <i className="fas fa-bullhorn text-blue-500"></i>
+                            Department Announcements
+                        </h2>
+                        <div className="space-y-3">
+                            {MOCK_DATA.announcements.map(ann => (
+                                <div key={ann.id} className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-l-4 border-blue-500">
+                                    <p className="font-medium text-gray-900 dark:text-white">{ann.title}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{ann.content}</p>
+                                    <div className="flex items-center gap-4 mt-2 text-xs text-gray-400 dark:text-gray-500">
+                                        <span><i className="fas fa-user mr-1"></i> {ann.postedBy}</span>
+                                        <span><i className="fas fa-calendar-alt mr-1"></i> {ann.date}</span>
+                                        <span className={`px-2 py-0.5 rounded-full ${
+                                            ann.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                                            ann.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                            'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                        }`}>
+                                            {ann.priority}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ---- Toolkit Page ----
+        const ToolkitPage = () => {
+            const tools = [
+                { id: 1, name: 'CGPA Calculator', icon: 'fa-calculator', color: 'blue', description: 'Calculate your GPA and CGPA' },
+                { id: 2, name: 'Engineering Calculator', icon: 'fa-calculator', color: 'green', description: 'Scientific and engineering calculations' },
+                { id: 3, name: 'Unit Converter', icon: 'fa-exchange-alt', color: 'purple', description: 'Convert between different units' },
+                { id: 4, name: 'Material Properties', icon: 'fa-cubes', color: 'orange', description: 'Engineering material properties reference' },
+                { id: 5, name: 'Steam Tables', icon: 'fa-thermometer-half', color: 'red', description: 'Thermodynamic steam properties' },
+                { id: 6, name: 'Formula Sheets', icon: 'fa-scroll', color: 'indigo', description: 'Quick reference for engineering formulas' }
+            ];
+
+            return (
+                <div className="p-4 md:p-6 space-y-6">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Engineering Toolkit</h1>
+                        <p className="text-gray-500 dark:text-gray-400">Essential tools for your engineering journey</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {tools.map(tool => (
+                            <div key={tool.id} className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-800 card-hover">
+                                <div className={`w-12 h-12 rounded-xl bg-${tool.color}-100 dark:bg-${tool.color}-900/20 flex items-center justify-center text-${tool.color}-600 dark:text-${tool.color}-400 text-xl`}>
+                                    <i className={`fas ${tool.icon}`}></i>
+                                </div>
+                                <h3 className="mt-3 font-bold text-gray-900 dark:text-white">{tool.name}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{tool.description}</p>
+                                <button className="mt-3 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-all">
+                                    Open Tool
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // ---- Marketplace Page (Placeholder) ----
+        const MarketplacePage = () => {
+            return (
+                <div className="p-4 md:p-6">
+                    <div className="bg-white dark:bg-[#1a1f2e] rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-800 text-center">
+                        <div className="w-20 h-20 mx-auto rounded-full bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-4xl">
+                            <i className="fas fa-store"></i>
+                        </div>
+                        <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Marketplace</h2>
+                        <p className="mt-2 text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+                            Buy and sell engineering books, tools, and project materials.
+                            <br />
+                            <span className="text-sm text-blue-600 dark:text-blue-400">Coming Soon!</span>
+                        </p>
+                        <div className="mt-6 flex justify-center gap-4">
+                            <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Books</p>
+                            </div>
+                            <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Tools</p>
+                            </div>
+                            <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Lab Equipment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ============================================================
+        // MAIN APP
+        // ============================================================
+
+        const App = () => {
+            const { currentPage } = useApp();
+
+            const renderPage = () => {
+                switch(currentPage) {
+                    case 'dashboard': return <DashboardPage />;
+                    case 'learning': return <LearningPage />;
+                    case 'collaboration': return <CollaborationPage />;
+                    case 'organization': return <OrganizationPage />;
+                    case 'services': return <ServicesPage />;
+                    case 'toolkit': return <ToolkitPage />;
+                    case 'marketplace': return <MarketplacePage />;
+                    default: return <DashboardPage />;
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-50 dark:bg-[#0a0e17] text-gray-900 dark:text-white flex">
+                    <Sidebar />
+                    <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+                        <TopBar />
+                        <main className="flex-1">
+                            {renderPage()}
+                        </main>
+                        {/* Footer */}
+                        <footer className="border-t border-gray-200 dark:border-gray-800 px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                            <div className="flex flex-wrap items-center justify-center gap-4">
+                                <span>© 2026 MECHCONNECT. All rights reserved.</span>
+                                <span>|</span>
+                                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
+                                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</a>
+                                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Support</a>
+                                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy</a>
+                                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms</a>
+                                <div className="flex items-center gap-2">
+                                    <a href="#" className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        <i className="fab fa-github"></i>
+                                    </a>
+                                    <a href="#" className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        <i className="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="#" className="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        <i className="fab fa-linkedin"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            );
+        };
+
+        // ============================================================
+        // RENDER
+        // ============================================================
+
+        const Root = () => {
+            return (
+                <AppProvider>
+                    <App />
+                </AppProvider>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
     </script>
-    <script src="../js/components.js"></script>
 </body>
 </html>

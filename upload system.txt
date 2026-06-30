@@ -1,0 +1,1030 @@
+
+
+
+FRONTEND[
+
+
+
+UPLOAD.HTML
+
+[
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MECHCONNECT Upload</title>
+    <link rel="stylesheet" href="upload.css">
+</head>
+<body>
+
+    <div class="upload-page">
+
+        <!-- HEADER -->
+        <div class="upload-header">
+
+            <!-- MOBILE SELECT -->
+            <div class="mobile-upload-select">
+                <select id="mobileCategory">
+                    <option value="Past Questions">Past Questions</option>
+                    <option value="Projects">Projects</option>
+                    <option value="Reports">Reports</option>
+                    <option value="Materials">Materials</option>
+                    <option value="Assignments">Assignments</option>
+                </select>
+            </div>
+
+            <!-- DESKTOP BUTTONS -->
+            <div class="desktop-upload-buttons">
+                <button class="category-btn active">Past Questions</button>
+                <button class="category-btn">Projects</button>
+                <button class="category-btn">Reports</button>
+                <button class="category-btn">Materials</button>
+                <button class="category-btn">Assignments</button>
+            </div>
+
+            <!-- ACTIVE CATEGORY -->
+            <div class="selected-category">
+                <h3>
+                    Selected Upload Type:
+                    <span id="selectedText">Past Questions</span>
+                </h3>
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <div class="upload-form-container">
+
+            <div class="form-grid">
+
+                <div class="input-group">
+                    <label>Resource Title</label>
+                    <input type="text" placeholder="Machine Design Assignment">
+                </div>
+
+                <div class="input-group">
+                    <label>Course Code</label>
+                    <input type="text" placeholder="MEE 301">
+                </div>
+
+                <div class="input-group">
+                    <label>Level</label>
+                    <select id="levelSelect">
+                        <option value="">Select Level</option>
+                        <option value="100L">100L</option>
+                        <option value="200L">200L</option>
+                        <option value="300L">300L</option>
+                        <option value="400L">400L</option>
+                        <option value="500L">500L</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Semester</label>
+                    <select id="semesterSelect">
+                        <option value="">Select Semester</option>
+                        <option value="first">First Semester</option>
+                        <option value="second">Second Semester</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Option</label>
+                    <select id="optionSelect" disabled>
+                        <option value="">Select Option</option>
+                        <option value="ATE">ATE</option>
+                        <option value="ARE">ARE</option>
+                        <option value="IPE">IPE</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Upload Date</label>
+                    <input type="date">
+                </div>
+
+            </div>
+
+            <!-- DRAG AREA -->
+            <div class="drag-area" id="dragArea">
+
+                <input type="file" id="fileInput" hidden>
+
+                <div class="drag-content">
+                    <div class="upload-icon">📁</div>
+                    <h2>Drag & Drop File Here</h2>
+                    <p>or click to choose file</p>
+                    <button class="choose-file-btn" id="chooseBtn">
+                        Choose File
+                    </button>
+                </div>
+
+                <div class="file-preview" id="filePreview"></div>
+
+                <!-- UPLOAD PROGRESS -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="progress-text" id="progressText">
+                    Uploading File...
+                </div>
+
+            </div>
+
+            <!-- MEDIA TYPE -->
+            <div class="media-type-section">
+                <label>Media Type</label>
+                <select>
+                    <option>File</option>
+                    <option>Image</option>
+                    <option>Video</option>
+                </select>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-buttons">
+                <button class="upload-btn">
+                    Upload File
+                </button>
+
+                <button class="back-btn">
+                    Back
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="upload.js"></script>
+</body>
+</html>
+]
+
+
+
+UPLOAD.CSS
+[
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f8f9fa;
+    padding:30px;
+}
+
+.upload-page{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.upload-header{
+    margin-bottom:30px;
+}
+
+.mobile-upload-select{
+    display:none;
+}
+
+.mobile-upload-select select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #dcdcdc;
+    background:white;
+    font-size:16px;
+}
+
+.desktop-upload-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.category-btn{
+    padding:14px 22px;
+    border:none;
+    border-radius:12px;
+    background:#edf1f7;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:15px;
+    font-weight:600;
+}
+
+.category-btn:hover{
+    transform:translateY(-2px);
+}
+
+.category-btn.active{
+    background:#1d4ed8;
+    color:white;
+}
+
+.selected-category{
+    margin-top:20px;
+    padding:18px;
+    background:#f5f7fb;
+    border-radius:14px;
+}
+
+.selected-category h3{
+    color:#1e293b;
+    font-size:18px;
+}
+
+#selectedText{
+    color:#1d4ed8;
+}
+
+.upload-form-container{
+    margin-top:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+    gap:20px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.input-group label{
+    margin-bottom:8px;
+    font-weight:600;
+    color:#334155;
+}
+
+.input-group input,
+.input-group select{
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #d7dce3;
+    outline:none;
+    background:#fff;
+    transition:0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus{
+    border-color:#2563eb;
+}
+
+.drag-area{
+    margin-top:35px;
+    border:2px dashed #cbd5e1;
+    border-radius:20px;
+    padding:50px 20px;
+    text-align:center;
+    background:#fafafa;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.drag-area:hover{
+    border-color:#2563eb;
+    background:#f8fbff;
+}
+
+.upload-icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.drag-content h2{
+    color:#1e293b;
+    margin-bottom:10px;
+}
+
+.drag-content p{
+    color:#64748b;
+    margin-bottom:20px;
+}
+
+.choose-file-btn{
+    padding:12px 22px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.choose-file-btn:hover{
+    transform:scale(1.03);
+}
+
+.file-preview{
+    margin-top:20px;
+    font-weight:600;
+    color:#0f172a;
+}
+
+.progress-container{
+    width:100%;
+    height:12px;
+    background:#e2e8f0;
+    border-radius:20px;
+    margin-top:25px;
+    overflow:hidden;
+    display:none;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:#2563eb;
+    border-radius:20px;
+    transition:width 0.3s ease;
+}
+
+.progress-text{
+    margin-top:12px;
+    font-size:14px;
+    color:#475569;
+    font-weight:600;
+    display:none;
+}
+
+.media-type-section{
+    margin-top:30px;
+}
+
+.media-type-section label{
+    display:block;
+    margin-bottom:10px;
+    font-weight:600;
+}
+
+.media-type-section select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #d7dce3;
+}
+
+.action-buttons{
+    margin-top:35px;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.upload-btn,
+.back-btn{
+    flex:1;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.upload-btn{
+    background:#1d4ed8;
+    color:white;
+}
+
+.upload-btn:hover{
+    transform:translateY(-2px);
+}
+
+.back-btn{
+    background:#e2e8f0;
+    color:#0f172a;
+}
+
+.back-btn:hover{
+    background:#cbd5e1;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    .upload-page{
+        padding:20px;
+    }
+
+    .desktop-upload-buttons{
+        display:none;
+    }
+
+    .mobile-upload-select{
+        display:block;
+    }
+
+    .action-buttons{
+        flex-direction:column;
+    }
+}
+]
+
+UPLOAD.JS
+[
+const categoryButtons = document.querySelectorAll('.category-btn');
+const selectedText = document.getElementById('selectedText');
+const mobileCategory = document.getElementById('mobileCategory');
+
+const levelSelect = document.getElementById('levelSelect');
+const optionSelect = document.getElementById('optionSelect');
+
+const dragArea = document.getElementById('dragArea');
+const fileInput = document.getElementById('fileInput');
+const chooseBtn = document.getElementById('chooseBtn');
+const filePreview = document.getElementById('filePreview');
+
+const progressContainer = document.getElementById('progressContainer');
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+
+const uploadBtn = document.querySelector('.upload-btn');
+
+const resourceTitle = document.querySelector('input[placeholder="Machine Design Assignment"]');
+const courseCode = document.querySelector('input[placeholder="MEE 301"]');
+const semesterSelect = document.getElementById('semesterSelect');
+const mediaTypeSelect = document.querySelector('.media-type-section select');
+
+const uploadDate = document.querySelector('input[type="date"]');
+
+let selectedFile = null;
+
+/* =========================
+   CATEGORY HANDLING
+========================= */
+
+categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        selectedText.textContent = button.textContent;
+    });
+});
+
+mobileCategory.addEventListener('change', () => {
+    selectedText.textContent = mobileCategory.value;
+});
+
+/* =========================
+   LEVEL → OPTION LOGIC
+========================= */
+
+levelSelect.addEventListener('change', () => {
+    const level = levelSelect.value;
+
+    if (level === '400L' || level === '500L') {
+        optionSelect.disabled = false;
+    } else {
+        optionSelect.disabled = true;
+        optionSelect.value = '';
+    }
+});
+
+/* =========================
+   FILE PICKER
+========================= */
+
+chooseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fileInput.click();
+});
+
+dragArea.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) validateAndPreviewFile(file);
+});
+
+/* DRAG EVENTS */
+dragArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dragArea.style.borderColor = '#2563eb';
+});
+
+dragArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) validateAndPreviewFile(file);
+});
+
+/* =========================
+   FILE VALIDATION
+========================= */
+
+function validateAndPreviewFile(file) {
+
+    const mediaType = mediaTypeSelect.value;
+
+    const imageTypes = ['image/png','image/jpeg','image/jpg','image/webp'];
+    const videoTypes = ['video/mp4','video/mov','video/mkv'];
+
+    let valid = false;
+
+    if (mediaType === 'Image') {
+        valid = imageTypes.includes(file.type);
+    }
+
+    if (mediaType === 'Video') {
+        valid = videoTypes.includes(file.type);
+    }
+
+    if (mediaType === 'File') {
+        valid = true;
+    }
+
+    if (!valid) {
+        alert(`Invalid ${mediaType} selected.`);
+        return;
+    }
+
+    selectedFile = file;
+    showPreview(file);
+}
+
+/* =========================
+   FILE PREVIEW
+========================= */
+
+function showPreview(file) {
+
+    const fileURL = URL.createObjectURL(file);
+
+    if (file.type.startsWith('image/')) {
+        filePreview.innerHTML = `
+            <img src="${fileURL}" class="preview-image">
+            <h3>${file.name}</h3>
+        `;
+    }
+    else if (file.type.startsWith('video/')) {
+        filePreview.innerHTML = `
+            <video controls class="preview-video">
+                <source src="${fileURL}">
+            </video>
+            <h3>${file.name}</h3>
+        `;
+    }
+    else {
+        filePreview.innerHTML = `
+            <div class="file-card">
+                <div class="file-icon">📄</div>
+                <div>
+                    <h3>${file.name}</h3>
+                    <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+/* =========================
+   FORM VALIDATION
+========================= */
+
+function validateForm() {
+
+    if (resourceTitle.value.trim() === '') return alert('Title required'), false;
+    if (courseCode.value.trim() === '') return alert('Course code required'), false;
+    if (levelSelect.value === '') return alert('Level required'), false;
+    if (semesterSelect.value === '') return alert('Semester required'), false;
+    if (!uploadDate.value) return alert('Upload date required'), false;
+    if ((levelSelect.value === '400L' || levelSelect.value === '500L') && optionSelect.value === '')
+        return alert('Select option'), false;
+    if (!selectedFile) return alert('Select file'), false;
+
+    return true;
+}
+
+/* =========================
+   UPLOAD BUTTON
+========================= */
+
+uploadBtn.addEventListener('click', () => {
+
+    if (!validateForm()) return;
+
+    uploadToBackend();
+});
+
+/* =========================
+   REAL BACKEND UPLOAD
+========================= */
+
+function uploadToBackend() {
+
+    const formData = new FormData();
+
+    formData.append("title", resourceTitle.value);
+    formData.append("category", selectedText.textContent);
+    formData.append("media_type", mediaTypeSelect.value);
+
+    formData.append("level", levelSelect.value);
+    formData.append("semester", semesterSelect.value);
+    formData.append("specialization", optionSelect.value);
+    formData.append("course_code", courseCode.value);
+
+    formData.append("upload_date", uploadDate.value);
+
+    formData.append("description", "");
+
+    formData.append("file", selectedFile);
+
+    /* PROGRESS UI */
+    progressContainer.style.display = 'block';
+    progressText.style.display = 'block';
+
+    let progress = 0;
+    progressBar.style.width = '0%';
+
+    const interval = setInterval(() => {
+        if (progress < 90) {
+            progress += 5;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `Uploading... ${progress}%`;
+        }
+    }, 100);
+
+    fetch("http://127.0.0.1:5000/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        clearInterval(interval);
+
+        progressBar.style.width = '100%';
+        progressText.textContent = data.message || data.error;
+
+    })
+    .catch(err => {
+
+        clearInterval(interval);
+
+        progressText.textContent = "Upload failed";
+        console.log(err);
+    });
+}
+]
+
+]
+
+
+
+
+
+
+
+BACKEND[
+
+
+
+M0DEL/UPLOAD.MODEL
+[
+from backend import db
+from datetime import datetime
+
+
+class Upload(db.Model):
+    __tablename__ = "uploads"
+
+    # =========================
+    # PRIMARY KEY
+    # =========================
+    id = db.Column(db.Integer, primary_key=True)
+
+    # =========================
+    # BASIC INFO
+    # =========================
+    title = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+    media_type = db.Column(db.String(50), nullable=False)
+
+    # =========================
+    # ACADEMIC INFO
+    # =========================
+    level = db.Column(db.String(20), nullable=False)
+    semester = db.Column(db.String(50), nullable=False)
+    specialization = db.Column(db.String(50), nullable=True)
+    course_code = db.Column(db.String(100), nullable=False)
+
+    # =========================
+    # FILE INFO
+    # =========================
+    filename = db.Column(db.String(300), nullable=False)
+    original_filename = db.Column(db.String(300), nullable=False)
+    filepath = db.Column(db.String(500), nullable=False)
+    filetype = db.Column(db.String(50), nullable=False)
+    mimetype = db.Column(db.String(150), nullable=False)
+    filesize = db.Column(db.Float, nullable=False)
+
+    # =========================
+    # USER INFO
+    # =========================
+    uploaded_by = db.Column(db.String(150), nullable=True)
+
+    # =========================
+    # EXTRA CONTENT
+    # =========================
+    description = db.Column(db.Text, nullable=True)
+
+    # =========================
+    # SYSTEM DATA
+    # =========================
+    upload_date = db.Column(db.Date, nullable=False)
+    downloads = db.Column(db.Integer, default=0)
+    is_verified = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+]
+
+
+ROUTES/UPLOAD_ROUTE
+[
+from flask import Blueprint, request, jsonify, current_app
+from werkzeug.utils import secure_filename
+import os
+from datetime import datetime
+
+from backend import db
+from backend.models.upload_model import Upload
+
+
+upload = Blueprint("upload", __name__)
+
+# =========================
+# ALLOWED FILE TYPES
+# =========================
+ALLOWED_EXTENSIONS = {
+    "pdf", "doc", "docx", "ppt", "pptx",
+    "png", "jpg", "jpeg", "webp",
+    "zip",
+    "mp4", "mov", "mkv",
+    "mp3"
+}
+
+
+def allowed_file(filename):
+    return (
+        "." in filename and
+        filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
+
+
+# =========================
+# UPLOAD ROUTE
+# =========================
+@upload.route("/upload", methods=["POST"])
+def upload_file():
+
+    try:
+
+        # =========================
+        # GET DATA FROM REQUEST
+        # =========================
+        title = request.form.get("title")
+        category = request.form.get("category")
+        media_type = request.form.get("media_type")
+
+        level = request.form.get("level")
+        semester = request.form.get("semester")
+        specialization = request.form.get("specialization")
+
+        course_code = request.form.get("course_code")
+
+        upload_date = request.form.get("upload_date")
+
+        description = request.form.get("description")
+
+        file = request.files.get("file")
+
+        # =========================
+        # VALIDATION
+        # =========================
+        required_fields = [
+            title,
+            category,
+            media_type,
+            level,
+            semester,
+            course_code,
+            upload_date
+        ]
+
+        if not all(required_fields):
+            return jsonify({
+                "error": "Missing required fields"
+            }), 400
+
+        if level in ["400L", "500L"] and not specialization:
+            return jsonify({
+                "error": "Specialization required for 400L/500L"
+            }), 400
+
+        if not file or file.filename == "":
+            return jsonify({
+                "error": "No file selected"
+            }), 400
+
+        if not allowed_file(file.filename):
+            return jsonify({
+                "error": "File type not supported"
+            }), 400
+
+        # =========================
+        # PROCESS FILE
+        # =========================
+        original_filename = secure_filename(file.filename)
+
+        unique_name = (
+            str(datetime.utcnow().timestamp()).replace(".", "")
+            + "_"
+            + original_filename
+        )
+
+        filetype = original_filename.rsplit(".", 1)[1].lower()
+
+        # file size in MB
+        filesize = round(len(file.read()) / (1024 * 1024), 2)
+
+        # reset file pointer after reading size
+        file.seek(0)
+
+        # =========================
+        # MIME TYPE
+        # =========================
+        mimetype = file.mimetype
+
+        # =========================
+        # CATEGORY FOLDER MAPPING
+        # =========================
+        category_map = {
+            "Past Questions": "past_questions",
+            "Projects": "projects",
+            "Reports": "reports",
+            "Materials": "materials",
+            "Assignments": "assignments"
+        }
+
+        folder = category_map.get(category, "materials")
+
+        upload_folder = current_app.config.get("UPLOAD_FOLDER")
+
+        save_dir = os.path.join(upload_folder, folder)
+
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        file_path = os.path.join(save_dir, unique_name)
+
+        # =========================
+        # SAVE FILE
+        # =========================
+        file.save(file_path)
+
+        # =========================
+        # SAVE TO DATABASE
+        # =========================
+        new_upload = Upload(
+            title=title,
+            category=category,
+            media_type=media_type,
+
+            level=level,
+            semester=semester,
+            specialization=specialization,
+            course_code=course_code,
+
+            filename=unique_name,
+            original_filename=original_filename,
+            filepath=file_path,
+            filetype=filetype,
+            mimetype=mimetype,
+            filesize=filesize,
+
+            description=description,
+
+            upload_date=datetime.strptime(upload_date, "%Y-%m-%d").date(),
+
+            downloads=0,
+            is_verified=False,
+            is_active=True
+        )
+
+        db.session.add(new_upload)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Upload successful",
+            "filename": unique_name
+        }), 201
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+]
+
+__INIT__.PY
+[
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+import os
+
+db = SQLAlchemy()
+
+def create_app():
+    app = Flask(__name__)
+    CORS(app)
+
+    # =========================
+    # DATABASE CONFIG
+    # =========================
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    db_path = os.path.join(basedir, "..", "instance", "mechconnect.db")
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+        "DATABASE_URL",
+        "sqlite:///" + db_path
+    )
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SECRET_KEY"] = "mechconnect_secret_key"
+
+    # =========================
+    # UPLOAD CONFIGURATION
+    # =========================
+    UPLOAD_FOLDER = os.path.join(basedir, "uploads")
+    app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+    # 16MB limit
+    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+
+    # ensure upload folder exists
+    if not os.path.exists(app.config["UPLOAD_FOLDER"]):
+        os.makedirs(app.config["UPLOAD_FOLDER"])
+
+    # =========================
+    # INIT DB
+    # =========================
+    db.init_app(app)
+
+    # import models
+    from backend.models.user_model import User
+    from backend.models.upload_model import Upload
+
+    with app.app_context():
+        db.create_all()
+
+    # =========================
+    # BLUEPRINTS
+    # =========================
+    from backend.routes.auth_routes import auth
+    app.register_blueprint(auth, url_prefix="/api/auth")
+
+    # (UPLOAD ROUTE WILL GO HERE LATER)
+    from backend.routes.upload_routes import upload
+    app.register_blueprint(upload, url_prefix="/api/upload")
+
+    # =========================
+    # TEST ROUTE
+    # =========================
+    @app.route("/")
+    def home():
+        return "MechConnect API is running!"
+
+    return app
+]
+
+UPLOAD/
+
+[
+assignments
+past-questions
+projects
+reports
+materials
+]
+

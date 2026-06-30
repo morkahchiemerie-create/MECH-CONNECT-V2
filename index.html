@@ -213,69 +213,75 @@ async function registerUser() {
 
 async function loginUser() {
 
-    const identifier = document.getElementById("loginUser").value;
+    const identifier = document.getElementById("loginUser").value.trim();
     const password = document.getElementById("loginPassword").value;
 
-    // 🔒 Basic validation
     if (!identifier || !password) {
-        alert("Please fill in all fields");
+        alert("Please fill in all fields.");
         return;
     }
 
     try {
+
         const res = await fetch(`${BASE_URL}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ identifier, password })
+            body: JSON.stringify({
+                identifier,
+                password
+            })
         });
 
         const result = await res.json();
 
-        // 🧠 Always log response (for debugging)
-        console.log("SERVER RESPONSE:", result);
-
-        // ❌ If login failed
         if (!res.ok) {
-            alert(result.message || "Login failed");
+            alert(result.message);
             return;
         }
 
-        // 🛑 Critical safety check
-        if (!result || !result.user) {
-            console.error("Invalid backend response:", result);
-            alert("Login error: user data missing");
-            return;
-        }
+        // =========================
+        // SAVE LOGIN
+        // =========================
 
-        // ✅ Store user safely
+        localStorage.setItem("access_token", result.access_token);
         localStorage.setItem("user", JSON.stringify(result.user));
 
-        const role = result.user.role;
+        // =========================
+        // CLEAR LOGIN FORM
+        // =========================
 
-        console.log("ROLE:", role);
+        document.getElementById("loginUser").value = "";
+        document.getElementById("loginPassword").value = "";
 
-        // 🚀 Safe redirect
-        switch (role) {
-            case "student":
-                window.location.href = "frontend/student/dashboard.html";
-                break;
+        // =========================
+        // REDIRECT
+        // =========================
 
-            case "lecturer":
-                window.location.href = "frontend/lecturer/dashboard.html";
-                break;
+        if (result.user.role === "student") {
 
-            default:
-                console.warn("Unknown role:", role);
-                alert("Invalid user role. Contact admin.");
+            window.location.href = "frontend/student/dashboard.html";
+
+        } else if (result.user.role === "lecturer") {
+
+            window.location.href = "frontend/lecturer/dashboard.html";
+
+        } else {
+
+            alert("Unknown user role.");
+
         }
 
     } catch (error) {
-        console.error("LOGIN ERROR:", error);
-        alert("Server error. Please try again.");
+
+        console.error(error);
+        alert("Server error.");
+
     }
+
 }
+
 </script>
 
 </body>

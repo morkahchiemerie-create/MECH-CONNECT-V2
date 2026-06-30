@@ -17,7 +17,7 @@
         /* ===== SIDEBAR ===== */
         .sidebar {
             position: relative;
-            margin-top: 119px;
+            padding-top: 119px;
             left: 0;
             width: 100%;
             height: auto;

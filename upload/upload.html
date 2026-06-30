@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MECHCONNECT Upload</title>
+    <link rel="stylesheet" href="upload.css">
+</head>
+<body>
+
+    <div class="upload-page">
+
+        <!-- HEADER -->
+        <div class="upload-header">
+
+            <!-- MOBILE SELECT -->
+            <div class="mobile-upload-select">
+                <select id="mobileCategory">
+                    <option value="Past Questions">Past Questions</option>
+                    <option value="Projects">Projects</option>
+                    <option value="Reports">Reports</option>
+                    <option value="Materials">Materials</option>
+                    <option value="Assignments">Assignments</option>
+                </select>
+            </div>
+
+            <!-- DESKTOP BUTTONS -->
+            <div class="desktop-upload-buttons">
+                <button class="category-btn active">Past Questions</button>
+                <button class="category-btn">Projects</button>
+                <button class="category-btn">Reports</button>
+                <button class="category-btn">Materials</button>
+                <button class="category-btn">Assignments</button>
+            </div>
+
+            <!-- ACTIVE CATEGORY -->
+            <div class="selected-category">
+                <h3>
+                    Selected Upload Type:
+                    <span id="selectedText">Past Questions</span>
+                </h3>
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <div class="upload-form-container">
+
+            <div class="form-grid">
+
+                <div class="input-group">
+                    <label>Resource Title</label>
+                    <input type="text" placeholder="Machine Design Assignment">
+                </div>
+
+                <div class="input-group">
+                    <label>Course Code</label>
+                    <input type="text" placeholder="MEE 301">
+                </div>
+
+                <div class="input-group">
+                    <label>Level</label>
+                    <select id="levelSelect">
+                        <option value="">Select Level</option>
+                        <option value="100L">100L</option>
+                        <option value="200L">200L</option>
+                        <option value="300L">300L</option>
+                        <option value="400L">400L</option>
+                        <option value="500L">500L</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Semester</label>
+                    <select id="semesterSelect">
+                        <option value="">Select Semester</option>
+                        <option value="first">First Semester</option>
+                        <option value="second">Second Semester</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Option</label>
+                    <select id="optionSelect" disabled>
+                        <option value="">Select Option</option>
+                        <option value="ATE">ATE</option>
+                        <option value="ARE">ARE</option>
+                        <option value="IPE">IPE</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Upload Date</label>
+                    <input type="date">
+                </div>
+
+            </div>
+
+            <!-- DRAG AREA -->
+            <div class="drag-area" id="dragArea">
+
+                <input type="file" id="fileInput" hidden>
+
+                <div class="drag-content">
+                    <div class="upload-icon">📁</div>
+                    <h2>Drag & Drop File Here</h2>
+                    <p>or click to choose file</p>
+                    <button class="choose-file-btn" id="chooseBtn">
+                        Choose File
+                    </button>
+                </div>
+
+                <div class="file-preview" id="filePreview"></div>
+
+                <!-- UPLOAD PROGRESS -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="progress-text" id="progressText">
+                    Uploading File...
+                </div>
+
+            </div>
+
+            <!-- MEDIA TYPE -->
+            <div class="media-type-section">
+                <label>Media Type</label>
+                <select>
+                    <option>File</option>
+                    <option>Image</option>
+                    <option>Video</option>
+                </select>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-buttons">
+                <button class="upload-btn">
+                    Upload File
+                </button>
+
+                <button class="back-btn">
+                    Back
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="upload.js"></script>
+</body>
+</html>

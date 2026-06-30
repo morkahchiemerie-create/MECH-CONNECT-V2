@@ -1,0 +1,1515 @@
+USER_MODEL.PY[
+# backend/models/user_model.py
+
+from backend import db
+from datetime import datetime
+
+ 
+class User(db.Model):
+    __tablename__ = "users"
+
+    # Primary Key
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Basic Identity
+    full_name = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+
+    # Student Matric Number OR Lecturer Staff ID
+    matric_or_staff_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # Academic Information
+    level = db.Column(db.String(50), nullable=True)
+    residence = db.Column(db.String(150), nullable=True)
+
+    # Authentication
+    password = db.Column(db.String(255), nullable=False)
+
+    # Role Management
+    role = db.Column(db.String(50), nullable=False)
+    # Example: student / lecturer
+
+    # Login Tracking
+    login_count = db.Column(db.Integer, default=0)
+    last_login = db.Column(db.DateTime, nullable=True)
+
+    # Account Creation Time
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<User {self.email}>"
+]
+
+
+UPLOAD_model.py[
+from backend import db
+from datetime import datetime
+
+
+class Upload(db.Model):
+    __tablename__ = "uploads"
+
+    # =========================
+    # PRIMARY KEY
+    # =========================
+    id = db.Column(db.Integer, primary_key=True)
+
+    # =========================
+    # BASIC INFO
+    # =========================
+    title = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+    media_type = db.Column(db.String(50), nullable=False)
+
+    # =========================
+    # ACADEMIC INFO
+    # =========================
+    level = db.Column(db.String(20), nullable=False)
+    semester = db.Column(db.String(50), nullable=False)
+    specialization = db.Column(db.String(50), nullable=True)
+    course_code = db.Column(db.String(100), nullable=False)
+
+    # =========================
+    # FILE INFO
+    # =========================
+    filename = db.Column(db.String(300), nullable=False)
+    original_filename = db.Column(db.String(300), nullable=False)
+    filepath = db.Column(db.String(500), nullable=False)
+    filetype = db.Column(db.String(50), nullable=False)
+    mimetype = db.Column(db.String(150), nullable=False)
+    filesize = db.Column(db.Float, nullable=False)
+
+    # =========================
+    # USER INFO
+    # =========================
+    uploaded_by = db.Column(db.String(150), nullable=True)
+
+    # =========================
+    # EXTRA CONTENT
+    # =========================
+    description = db.Column(db.Text, nullable=True)
+
+    # =========================
+    # SYSTEM DATA
+    # =========================
+    upload_date = db.Column(db.Date, nullable=False)
+    downloads = db.Column(db.Integer, default=0)
+    is_verified = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+]
+
+
+auth_route[
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
+from backend import db
+from backend.models.user_model import User
+from datetime import datetime
+import bcrypt
+
+auth = Blueprint("auth", __name__)
+
+
+# =========================
+# REGISTER ROUTE
+# =========================
+@auth.route("/register", methods=["POST"])
+def register():
+
+    data = request.get_json()
+
+    full_name = data.get("full_name")
+    email = data.get("email")
+    matric_or_staff_id = data.get("matric_or_staff_id")
+    level = data.get("level")
+    residence = data.get("residence")
+    password = data.get("password")
+    role = data.get("role")
+
+    # =========================
+    # VALIDATION
+    # =========================
+    if not full_name or not email or not matric_or_staff_id or not password or not role:
+        return jsonify({
+            "message": "Please fill in all required fields."
+        }), 400
+
+    # =========================
+    # CHECK IF USER EXISTS
+    # =========================
+    existing_user = User.query.filter(
+        (User.email == email) |
+        (User.matric_or_staff_id == matric_or_staff_id)
+    ).first()
+
+    if existing_user:
+        return jsonify({
+            "message": "Email or Matric/Staff ID already exists."
+        }), 400
+
+    # =========================
+    # HASH PASSWORD
+    # =========================
+    hashed_password = bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    # =========================
+    # CREATE USER
+    # =========================
+    new_user = User(
+        full_name=full_name,
+        email=email,
+        matric_or_staff_id=matric_or_staff_id,
+        level=level,
+        residence=residence,
+        password=hashed_password,
+        role=role
+    )
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Registration successful."
+    }), 201
+
+
+# =========================
+# LOGIN ROUTE
+# =========================
+@auth.route("/login", methods=["POST"])
+def login():
+
+    data = request.get_json()
+
+    identifier = data.get("identifier")
+    password = data.get("password")
+
+    # =========================
+    # FIND USER
+    # =========================
+    user = User.query.filter(
+        (User.email == identifier) |
+        (User.matric_or_staff_id == identifier)
+    ).first()
+
+    if not user:
+        return jsonify({
+            "message": "Invalid email/matric number or password."
+        }), 401
+
+    # =========================
+    # VERIFY PASSWORD
+    # =========================
+    if not bcrypt.checkpw(
+        password.encode("utf-8"),
+        user.password.encode("utf-8")
+    ):
+        return jsonify({
+            "message": "Invalid email/matric number or password."
+        }), 401
+
+    # =========================
+    # UPDATE LOGIN INFO
+    # =========================
+    user.login_count += 1
+    user.last_login = datetime.utcnow()
+
+    db.session.commit()
+
+    # =========================
+    # CREATE JWT TOKEN
+    # =========================
+    access_token = create_access_token(
+        identity=str(user.id),
+        additional_claims={
+            "role": user.role,
+            "name": user.full_name
+        }
+    )
+
+    # =========================
+    # RETURN RESPONSE
+    # =========================
+    return jsonify({
+        "message": "Login successful.",
+        "access_token": access_token,
+        "user": {
+            "id": user.id,
+            "name": user.full_name,
+            "role": user.role,
+            "login_count": user.login_count
+        }
+    }), 200
+]
+
+upload_route[
+from flask import Blueprint, request, jsonify, current_app
+from werkzeug.utils import secure_filename
+import os
+from datetime import datetime
+
+from backend import db
+from backend.models.upload_model import Upload
+
+
+upload = Blueprint("upload", __name__)
+
+# =========================
+# ALLOWED FILE TYPES
+# =========================
+ALLOWED_EXTENSIONS = {
+    "pdf", "doc", "docx", "ppt", "pptx",
+    "png", "jpg", "jpeg", "webp",
+    "zip",
+    "mp4", "mov", "mkv",
+    "mp3"
+}
+
+
+def allowed_file(filename):
+    return (
+        "." in filename and
+        filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    )
+
+
+# =========================
+# UPLOAD ROUTE
+# =========================
+@upload.route("/upload", methods=["POST"])
+def upload_file():
+
+    try:
+
+        # =========================
+        # GET DATA FROM REQUEST
+        # =========================
+        title = request.form.get("title")
+        category = request.form.get("category")
+        media_type = request.form.get("media_type")
+
+        level = request.form.get("level")
+        semester = request.form.get("semester")
+        specialization = request.form.get("specialization")
+
+        course_code = request.form.get("course_code")
+
+        upload_date = request.form.get("upload_date")
+
+        description = request.form.get("description")
+
+        file = request.files.get("file")
+
+        # =========================
+        # VALIDATION
+        # =========================
+        required_fields = [
+            title,
+            category,
+            media_type,
+            level,
+            semester,
+            course_code,
+            upload_date
+        ]
+
+        if not all(required_fields):
+            return jsonify({
+                "error": "Missing required fields"
+            }), 400
+
+        if level in ["400L", "500L"] and not specialization:
+            return jsonify({
+                "error": "Specialization required for 400L/500L"
+            }), 400
+
+        if not file or file.filename == "":
+            return jsonify({
+                "error": "No file selected"
+            }), 400
+
+        if not allowed_file(file.filename):
+            return jsonify({
+                "error": "File type not supported"
+            }), 400
+
+        # =========================
+        # PROCESS FILE
+        # =========================
+        original_filename = secure_filename(file.filename)
+
+        unique_name = (
+            str(datetime.utcnow().timestamp()).replace(".", "")
+            + "_"
+            + original_filename
+        )
+
+        filetype = original_filename.rsplit(".", 1)[1].lower()
+
+        # file size in MB
+        filesize = round(len(file.read()) / (1024 * 1024), 2)
+
+        # reset file pointer after reading size
+        file.seek(0)
+
+        # =========================
+        # MIME TYPE
+        # =========================
+        mimetype = file.mimetype
+
+        # =========================
+        # CATEGORY FOLDER MAPPING
+        # =========================
+        category_map = {
+            "Past Questions": "past_questions",
+            "Projects": "projects",
+            "Reports": "reports",
+            "Materials": "materials",
+            "Assignments": "assignments"
+        }
+
+        folder = category_map.get(category, "materials")
+
+        upload_folder = current_app.config.get("UPLOAD_FOLDER")
+
+        save_dir = os.path.join(upload_folder, folder)
+
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        file_path = os.path.join(save_dir, unique_name)
+
+        # =========================
+        # SAVE FILE
+        # =========================
+        file.save(file_path)
+
+        # =========================
+        # SAVE TO DATABASE
+        # =========================
+        new_upload = Upload(
+            title=title,
+            category=category,
+            media_type=media_type,
+
+            level=level,
+            semester=semester,
+            specialization=specialization,
+            course_code=course_code,
+
+            filename=unique_name,
+            original_filename=original_filename,
+            filepath=file_path,
+            filetype=filetype,
+            mimetype=mimetype,
+            filesize=filesize,
+
+            description=description,
+
+            upload_date=datetime.strptime(upload_date, "%Y-%m-%d").date(),
+
+            downloads=0,
+            is_verified=False,
+            is_active=True
+        )
+
+        db.session.add(new_upload)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Upload successful",
+            "filename": unique_name
+        }), 201
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+
+# =========================
+# GET FILES FOR COURSE PAGE
+# =========================
+@upload.route("/files", methods=["GET"])
+def get_course_files():
+
+    try:
+        course_code = request.args.get("course_code")
+        category = request.args.get("category", "all")
+
+        if not course_code:
+            return jsonify({
+                "error": "course_code is required"
+            }), 400
+
+        query = Upload.query.filter_by(course_code=course_code)
+
+        if category.lower() != "all":
+            query = query.filter(
+                Upload.category.ilike(category)
+            )
+
+        files = query.order_by(
+            Upload.upload_date.desc()
+        ).all()
+
+        result = []
+
+        for file in files:
+
+            result.append({
+                "id": file.id,
+                "title": file.title,
+                "category": file.category,
+                "media_type": file.media_type,
+                "description": file.description,
+                "filetype": file.filetype,
+                "filesize": file.filesize,
+                "downloads": file.downloads,
+                "upload_date": file.upload_date.strftime("%Y-%m-%d")
+            })
+
+        return jsonify({
+            "files": result
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
+    
+
+    # =========================
+# DOWNLOAD / VIEW FILE
+# =========================
+@upload.route("/download/<int:file_id>", methods=["GET"])
+def download_file(file_id):
+
+    try:
+        # =========================
+        # FIND FILE IN DATABASE
+        # =========================
+        file_record = Upload.query.get(file_id)
+
+        if not file_record:
+            return jsonify({
+                "error": "File not found"
+            }), 404
+
+        # =========================
+        # CHECK IF FILE EXISTS ON DISK
+        # =========================
+        if not os.path.exists(file_record.filepath):
+            return jsonify({
+                "error": "File missing from server storage"
+            }), 404
+
+        # =========================
+        # INCREMENT DOWNLOAD COUNT
+        # =========================
+        file_record.downloads += 1
+        db.session.commit()
+
+        # =========================
+        # SEND FILE TO USER
+        # =========================
+        from flask import send_file
+
+        return send_file(
+            file_record.filepath,
+            as_attachment=True,
+            download_name=file_record.original_filename
+        )
+
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+# =========================
+# VIEW FILE
+# =========================
+@upload.route("/view/<int:file_id>", methods=["GET"])
+def view_file(file_id):
+
+    try:
+
+        # =========================
+        # FIND FILE
+        # =========================
+        file_record = Upload.query.get(file_id)
+
+        if not file_record:
+            return jsonify({
+                "error": "File not found"
+            }), 404
+
+        # =========================
+        # CHECK FILE EXISTS
+        # =========================
+        if not os.path.exists(file_record.filepath):
+            return jsonify({
+                "error": "File missing from server storage"
+            }), 404
+
+        # =========================
+        # SEND FILE TO BROWSER
+        # =========================
+        from flask import send_file
+
+        return send_file(
+            file_record.filepath,
+            mimetype=file_record.mimetype,
+            as_attachment=False
+        )
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+
+        # =========================
+# GET ALL FILES
+# =========================
+@upload.route("/all-files", methods=["GET"])
+def get_all_files():
+
+    try:
+
+        files = Upload.query.order_by(
+            Upload.upload_date.desc()
+        ).all()
+
+        results = []
+
+        for file in files:
+
+            results.append({
+
+                "id": file.id,
+                "title": file.title,
+                "description": file.description,
+                "course_code": file.course_code,
+                "category": file.category,
+                "filetype": file.filetype,
+                "filesize": file.filesize,
+                "downloads": file.downloads,
+                "upload_date": file.upload_date
+
+            })
+
+        return jsonify({
+            "files": results
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+
+]
+
+
+dashboard.html[
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user || user.role !== "student") {
+        alert("Unauthorized access");
+        window.location.href = "../../index.html";
+    }
+});
+</script>
+
+    <meta charset="UTF-8">
+  
+    <title>Mechconnect Header</title>
+   <link rel="stylesheet" href="style.css">
+ </head>
+<body>
+
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout() {
+    localStorage.removeItem("user");
+    window.location.href = "../../index.html";
+}
+</script>
+
+<header class="mcj-header">
+    <div class="mobile-nav-toggle">
+        <div class="left">
+            <span class="menu-icon" onclick="toggleMenu()">&#9776;</span>
+        </div>
+
+        <!-- ===== OVERLAY ===== -->
+        <div id="overlay" class="overlay"></div>
+
+        <!-- ===== SIDE MENU (DRAWER) ===== -->
+        <div id="sideMenu" class="side-menu">
+            <h2 class="menu-title">Mechconnect</h2>
+            <ul class="menu-list">
+                <li><a href="dashboard.html">Home</a></li>
+                
+      <!-- ===== Academic Resources drop down===== -->          
+                <li>
+                    <a class="dropdown-toggle">Academic Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="../academic-system/dashboard/dashboard.html">Academic Course</a></li>
+                        <li><a href="../academic-system/search-engine/global-search/global-search.html">Past Questions</a></li>
+                    </ul>
+                </li>
+<!-- ===== Engineering Project ===== -->
+                <li>
+                    <a class="dropdown-toggle">Engineering Project</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="project2.html">Final Year Project</a></li>
+                        <li><a href="#">Project Option</a></li>
+                        <li><a href="#">Project Report</a></li>
+                    </ul>
+                </li>
+                    
+     <!-- ===== Student Community ===== -->
+                    <li>
+                        <a href="#" class="dropdown-toggle">Student Community</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Nimeche  Community</a></li>
+                            <li><a href=" ">Social Club</a></li>
+                            <li><a href="#">Project Community</a></li>
+                        </ul>
+                    </li>
+                    
+<!--NEWS/ EVENT/ ANNOUNCEMENT -->
+
+                <li><a href="event2.html">News/Event</a></li>
+                <li><a href="project.html"> Executive </a></li>
+                <li><a href="../Mechconnect2/index.html">Portal</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- DESKTOP NAV -->
+    <nav class="desktop-nav">
+        <ul class="desktop-nav-list">
+
+            <li><a href="#" class="dropdown-toggle desktop-nav-link">Home</a>
+            </li>
+            
+        <!-- desktop mode / Academic  resources -->
+            <li>
+<a href="" class="dropdown-toggle desktop-nav-link ">Academic Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="../academic-system/dashboard/dashboard.html">Academic Course</a></li>
+                        <li><a href="../academic-system/search-engine/global-search/global-search.html">Past Questions</a></li>
+                    </ul>
+</li>
+
+<!-- desktop mode / Engineering Project-->
+
+<li>
+<a href="" class="dropdown-toggle desktop-nav-link ">Engineering Project</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="project2.html">Final Year Project</a></li>
+                        <li><a href="#">Project Option</a></li>
+                        <li><a href="#">Project Report</a></li>
+                    </ul>
+                    </li>
+                    
+                    
+<!-- desktop mode / Student Community -->
+<li>
+                        <a href="#" class="dropdown-toggle desktop-nav-link ">Student Community</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Nimeche  Community</a></li>
+                            <li><a href=" ">Social Club</a></li>
+                            <li><a href="#">Project Community</a></li>
+                        </ul>
+                    </li>
+
+<!--Desktop Mode/------- NEWS/ EVENT/ ANNOUNCEMENT -->
+
+                <li><a href="event2.html"class="dropdown-toggle desktop-nav-link ">News/Event</a></li>
+                <!-- Desktop Mode/ Executive -->
+                <li><a href="project.html" class="dropdown-toggle desktop-nav-link "> Executive </a></li>
+                <!--Desktop Mode/ portal-->
+                <li><a href="../Mechconnect2/index.html" class="dropdown-toggle desktop-nav-link ">Portal</a></li>           
+        </ul>
+    </nav>
+
+    <div class="middle">
+        <input type="text" placeholder="Search..." class="search">
+    </div>
+
+    <div class="right">
+        <span class="futo">MECHCONNECT</span>
+    </div>
+</header>
+
+<div class="mechanical_futo_container">
+    <img src="../assets/images/futo_image.jpeg" alt="FUTO Logo">
+    <img src="../assets/images/MECH---DEPT.jpg" alt="FUTO Logo">
+    <div class="mechanical_futo">
+        THE FEDERAL UNIVERSITY<br>
+        OF TECHNOLOGY OWERRI
+    </div>
+</div>
+
+    
+    
+<!-- ================= DASHBOARD HERO ================= -->
+
+<section class="dashboard-hero">
+
+    <div class="hero-container">
+
+        <!-- Left Side -->
+        <div class="hero-left">
+
+            <p id="greeting" class="greeting"></p>
+
+            <h1>
+                Welcome back,
+                <span id="studentName"></span>
+            </h1>
+
+            <div class="student-information">
+
+                <div class="info-row">
+                    <span class="label">Department</span>
+                    <span id="studentDepartment"></span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Level</span>
+                    <span id="studentLevel"></span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Matric Number</span>
+                    <span id="studentMatric"></span>
+                </div>
+
+                <div class="info-row">
+                    <span class="label">Residence</span>
+                    <span id="studentResidence"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right Side (Desktop) -->
+        <div class="hero-right">
+
+            <button class="profile-btn">
+                View Profile
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+       
+
+      
+
+<section class="academic-resources">
+  <h2>Academic Resources</h2>
+  <div class="cards-container">
+    <div class="card">
+      <h3>Academic Courses</h3>
+      <p>Explore all available courses and their details.</p>
+      <button>View Courses</button>
+    </div>
+    <div class="card">
+      <h3>Past Questions</h3>
+      <p>Access previous exams to practice and prepare.</p>
+      <button>View Questions</button>
+    </div>
+
+    <div class="card">
+      <h3>Past Questions</h3>
+      <p>Access previous exams to practice and prepare.</p>
+      <button>View Questions</button>
+    </div>
+
+    <div class="card">
+      <h3>Past Questions</h3>
+      <p>Access previous exams to practice and prepare.</p>
+      <button>View Questions</button>
+    </div>
+
+    <div class="card">
+      <h3>Past Questions</h3>
+      <p>Access previous exams to practice and prepare.</p>
+      <button>View Questions</button>
+    </div>
+
+  </div>
+</section>
+
+
+
+<script>
+    const user = JSON.parse(localStorage.getItem("user"));
+
+if(user){
+
+    // Greeting
+
+    const hour = new Date().getHours();
+
+    let greeting = "";
+
+    if(hour < 12){
+
+        greeting = "Good Morning 👋";
+
+    }
+
+    else if(hour < 17){
+
+        greeting = "Good Afternoon 👋";
+
+    }
+
+    else{
+
+        greeting = "Good Evening 👋";
+
+    }
+
+    document.getElementById("greeting").textContent = greeting;
+
+    // User Information
+
+    document.getElementById("studentName").textContent =
+    user.full_name || "Student";
+
+    document.getElementById("studentDepartment").textContent =
+    user.department || "Mechanical Engineering";
+
+    document.getElementById("studentLevel").textContent =
+    (user.level || "") + " Level";
+
+    document.getElementById("studentMatric").textContent =
+    user.matric_or_staff_id || "-";
+
+    document.getElementById("studentResidence").textContent =
+    user.residence || "-";
+
+}
+</script>
+<script src="../js/auth-guard.js"></script>
+<script src="script.js"></script>
+
+
+</body>
+<html>
+
+]
+
+
+style.css[
+/* ========================= */
+/* GLOBAL STYLES             */
+/* ========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    width: 100%;
+}
+
+/* ========================= */
+/* HEADER / NAVIGATION       */
+/* ========================= */
+.mcj-header {
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #0a0f24;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 500;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.menu-icon {
+    font-size: 26px;
+    cursor: pointer;
+}
+
+/* ===== OVERLAY ===== */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 250;
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ===== SIDE MENU ===== */
+.side-menu {
+    height: 100%;
+    width: 260px;
+    position: fixed;
+    top: 0;
+    left: -260px;
+    background: #0b0f25;
+    color: white;
+    padding: 20px;
+    transition: 0.3s ease;
+    z-index: 300;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.side-menu.show {
+    left: 0;
+}
+
+/* ===== MENU TITLE ===== */
+.menu-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #22d3ee;
+}
+
+/* ===== MENU LIST ===== */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-list li {
+    margin-bottom: 20px;
+}
+
+.menu-list li a {
+    color: #e5e7eb;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.menu-list li a:hover {
+    color: #22d3ee;
+}
+
+.middle {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+}
+
+.search {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
+
+.right .futo {
+    display: flex;
+    font-size: 15px;
+    font-weight: bold;
+    color: green;
+    padding: 0px 10px;
+}
+
+/* ===== DROPDOWN ===== */
+.dropdown-toggle {
+    text-decoration: none;
+}
+
+.dropdown-menu {
+    display: none;
+    background-color: #1565c0;
+    min-width: 200px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    padding: 5px 10px;
+    border-bottom: 1px solid #0d47a1;
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu.show {
+    display: flex;
+}
+
+
+
+/* ===== DESKTOP NAV ===== */
+.desktop-nav {
+    display: none;
+}
+
+.desktop-nav-list{
+    display: flex;
+    gap: 15px;
+    list-style: none;
+}
+
+.desktop-nav-link {
+    color:#ffff ;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: 0.3s;
+    position: relative;
+    padding: 5px 0;
+}
+
+.desktop-nav-link:hover {
+    color: #22d3ee;
+}
+
+
+
+.desktop-nav-link:hover::after {
+    width: 100%;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (min-width: 768px) {
+    .desktop-nav {
+        display: flex;
+    }
+    .mobile-nav-toggle {
+        display: none;
+    }
+    
+    .middle {
+    padding: 0 10px;
+}
+
+
+/* ===== DROPDOWN ===== */
+.dropdown-toggle {
+    text-decoration: none;
+}
+
+.dropdown-menu {
+    display: none;
+    background-color: #1565c0;
+    min-width: 100px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-direction: column;
+    z-index: 1000;
+    position: absolute;
+}
+
+.dropdown-menu a {
+    padding: 5px 10px;
+    border-bottom: 1px solid #0d47a1;
+    display: block;
+    color: white;
+    text-decoration: none;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu.show {
+    display: flex;
+}
+
+}
+
+/* ========================= */
+/* MECHANICAL FUTO CONTAINER */
+/* ========================= */
+.mechanical_futo_container {
+    display: flex;
+    position: fixed;
+    top: 60px;
+    width: 100%;
+    align-items: center;
+    padding: 5px 20px;
+    background: #1A223F;
+    font-size: 12px;
+    z-index: 260;
+}
+
+.mechanical_futo_container img {
+    width: 60px;
+    height: 50px;
+    margin-right: 20px;
+    border-radius: 30px;
+}
+
+.mechanical_futo {
+    font-size: 13px;
+    font-weight: 500;
+    color: green;
+    line-height: 1.3;
+}
+/* ==========================================
+   DASHBOARD HERO
+========================================== */
+
+.dashboard-hero{
+    width:100%;
+    padding:40px 25px;
+    margin-top: 110px;
+}
+
+.hero-container{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+
+}
+
+.hero-left{
+
+    flex:1;
+
+}
+
+.hero-right{
+
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+
+}
+
+.greeting{
+
+    font-size:18px;
+    margin-bottom:10px;
+    color:#666;
+
+}
+
+.hero-left h1{
+
+    font-size:35px;
+    margin-bottom:25px;
+
+}
+
+.student-information{
+
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+
+}
+
+.info-row{
+
+    display:flex;
+    gap:10px;
+
+}
+
+.label{
+
+    font-weight:bold;
+
+}
+
+.profile-btn{
+
+    background:#0b4da2;
+    color:white;
+    border:none;
+    padding:15px 30px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+
+}
+
+.profile-btn:hover{
+
+    background:#083c80;
+
+}
+
+/* ---------------- MOBILE ---------------- */
+
+@media(max-width:768px){
+
+.hero-container{
+
+    flex-direction:column;
+    align-items:flex-start;
+
+}
+
+.hero-right{
+
+    width:100%;
+    margin-top:25px;
+
+}
+
+.profile-btn{
+
+    width:100%;
+
+}
+
+.student-information{
+
+    grid-template-columns:1fr;
+
+}
+
+.hero-left h1{
+
+    font-size:28px;
+
+}
+
+}
+
+
+.academic-resources {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #f8f9fa; /* light background */
+}
+
+.academic-resources h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background-color: #fff;
+  padding: 20px;
+  width: 250px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.card p {
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.card button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #1e40af; /* blue */
+  color: #fff;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.card button:hover {
+  background-color: #374ba0;
+}
+.resource-link{
+    color:white;
+    text-decoration:none;
+   
+    }
+
+/* ========================= */
+/* CTA SECTION               */
+/* ========================= */
+.cta {
+    width: 100%;
+    padding: 40px 20px;
+    background: #0a0f24;
+    color: white;
+    text-align: center;
+}
+
+.cta-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #f4c430;
+    color: #0a0f24;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.portal {
+    background: white;
+    color: #0a0f24;
+}
+
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.card-header h3 {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.card-header p {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.skill-item {
+  background: #f6f8fa;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.skill-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.skill-desc {
+  display: block;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+/* ========================= */
+/* FOOTER SECTION            */
+/* ========================= */
+.mcj-footer {
+    width: 100%;
+    background: #020611;
+    color: white;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.footer-section h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.footer-section p,
+.footer-section li {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section a {
+    color: #f4c430;
+    text-decoration: none;
+}
+
+/* ========================= */
+/* END OF CSS                */
+/* ========================= */
+
+]

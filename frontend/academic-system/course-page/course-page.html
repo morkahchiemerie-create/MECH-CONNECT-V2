@@ -1,0 +1,643 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>MECHCONNECT · Course Dashboard</title>
+    
+    <!-- Font Awesome 6 for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f7fc;
+            color: #1e293b;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        /* Main container */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        /* ========== HEADER (sticky) ========== */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            color: #0f3b5e;
+            background: #e9f0fa;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            color: #0a2a44;
+        }
+
+        .logo-text span {
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        .page-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #334155;
+            margin-left: 1rem;
+            border-left: 2px solid #cbd5e1;
+            padding-left: 1.2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-icon, .notification-icon {
+            font-size: 1.3rem;
+            color: #475569;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .search-icon:hover, .notification-icon:hover {
+            color: #2563eb;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(145deg, #1e4b6e, #0b2b44);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.6rem;
+            color: #1e293b;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .header-actions {
+                gap: 1rem;
+            }
+        }
+
+        /* ========== QUICK ACCESS BUTTONS (5 buttons) ========== */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-btn {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 1rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            font-weight: 500;
+            color: #1e293b;
+            border: 1px solid #f1f5f9;
+        }
+
+        .quick-btn i {
+            font-size: 1.6rem;
+            color: #2563eb;
+            transition: transform 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #f8faff;
+            box-shadow: 0 12px 24px rgba(37,99,235,0.12);
+            transform: translateY(-2px);
+            border-color: #bfdbfe;
+        }
+
+        .quick-btn:active {
+            transform: translateY(1px);
+        }
+
+        @media (max-width: 640px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero-section {
+            margin: 0.8rem 0 0.5rem;
+            padding: 1rem 0 0.5rem;
+            background: transparent;
+        }
+
+        .course-title-large {
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            font-weight: 800;
+            color: #0b2b44;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .course-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem 1.2rem;
+            margin-top: 0.8rem;
+            font-size: 0.95rem;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .meta-divider {
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        /* ========== ABOUT SECTION ========== */
+        .about-section {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid #eef2ff;
+        }
+
+        .about-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: #0f3b5e;
+        }
+
+        .about-content p {
+            margin-bottom: 1.2rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .about-content h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #0f3b5e;
+        }
+
+        .about-content h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .objectives-list, .outline-list {
+            list-style: none;
+            margin: 0.5rem 0 1rem;
+            padding-left: 0;
+        }
+
+        .objectives-list li, .outline-list li {
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+        }
+
+        .objectives-list i, .outline-list i {
+            color: #2563eb;
+            width: 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .lecturer-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 1rem 1.25rem;
+            margin-top: 0.5rem;
+            border: 1px solid #eef2ff;
+        }
+
+        .lecturer-dept {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ========== SECONDARY ACTIONS ========== */
+        .secondary-actions {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        .sec-btn {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 1rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.03);
+            transition: all 0.25s;
+            cursor: pointer;
+            font-weight: 500;
+            border: 1px solid #edf2f9;
+        }
+
+        .sec-btn i {
+            font-size: 1.5rem;
+            color: #0f3b5e;
+        }
+
+        .sec-btn:hover {
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .secondary-actions {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+        }
+
+        /* ========== FILTER BAR ========== */
+        .filter-bar {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding: 0.5rem 0 1rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.6rem 1.3rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #334155;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .filter-btn.active {
+            background: #0f3b5e;
+            color: white;
+            border-color: #0f3b5e;
+            box-shadow: 0 8px 14px rgba(15,59,94,0.2);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: #f1f5f9;
+        }
+
+        /* ========== FILES CONTAINER ========== */
+        .files-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.2rem 1.5rem;
+            scroll-behavior: smooth;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .files-container {
+                flex-direction: column;
+                overflow-x: visible;
+            }
+        }
+
+        .file-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.2rem;
+            display: flex;
+            gap: 1rem;
+            min-width: 320px;
+            max-width: 400px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+            transition: all 0.25s;
+            border: 1px solid #f0f4fe;
+            flex-shrink: 0;
+            align-items: flex-start;
+        }
+
+        .file-card:hover {
+            box-shadow: 0 18px 32px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            border-color: #cbd5e1;
+        }
+
+        .file-thumb {
+            width: 60px;
+            height: 70px;
+            background: #f0f4ff;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #2563eb;
+        }
+
+        .file-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .file-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0a2a44;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .file-desc {
+            font-size: 0.85rem;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .download-btn {
+            margin-top: 0.4rem;
+            background: #0f3b5e;
+            border: none;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            width: fit-content;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background: #1e4b6e;
+        }
+        .file-actions{
+            display:flex;
+            gap:10px;
+            margin-top:10px;
+        }
+
+        .view-btn{
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:8px 14px;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        .view-btn:hover{
+            background:#1d4ed8;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+            font-style: italic;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+        }
+
+        /* Back to dashboard link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            transition: gap 0.2s;
+        }
+
+        .back-link:hover {
+            gap: 0.8rem;
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard {
+                padding: 0 1rem;
+            }
+            .file-card {
+                min-width: auto;
+                max-width: 100%;
+            }
+            .about-section {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    
+    <!-- ========== HEADER ========== -->
+    <header class="main-header">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="logo-text">
+                MECH<span>CONNECT</span>
+            </div>
+        </div>
+        <div class="page-title">
+            Course Dashboard
+        </div>
+        <div class="header-actions">
+            <i class="fas fa-search search-icon"></i>
+            <i class="fas fa-bell notification-icon"></i>
+            <div class="avatar">MC</div>
+            <i class="fas fa-bars hamburger"></i>
+        </div>
+    </header>
+
+    <!-- ========== BACK LINK ========== -->
+    <a href="../dashboard/dashboard.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <!-- ========== QUICK ACTIONS ========== -->
+   <div class="quick-actions-grid">
+
+    <button class="quick-btn" id="pastQuestionsBtn">
+        <i class="fas fa-file-alt"></i>
+        Past Questions
+    </button>
+
+    <button class="quick-btn" id="materialBtn">
+        <i class="fas fa-book"></i>
+        Material
+    </button>
+
+    <button class="quick-btn" id="assignmentBtn">
+        <i class="fas fa-tasks"></i>
+        Assignment
+    </button>
+
+    <button class="quick-btn" id="reportBtn">
+        <i class="fas fa-chart-bar"></i>
+        Report
+    </button>
+
+    <button class="quick-btn" id="videoBtn">
+        <i class="fas fa-video"></i>
+        Video
+    </button>
+
+</div>
+
+    <!-- ========== HERO SECTION (DYNAMIC) ========== -->
+    <section class="hero-section">
+        <h1 id="courseTitle" class="course-title-large">Loading Course...</h1>
+        <div id="courseMeta" class="course-meta">
+            <span>---</span>
+            <span class="meta-divider">•</span>
+            <span>---</span>
+            <span class="meta-divider">•</span>
+            <span>---</span>
+            <span class="meta-divider">•</span>
+            <span>---</span>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT SECTION (DYNAMIC) ========== -->
+    <section class="about-section">
+        <h2 class="about-title">📖 About Course</h2>
+        <div id="aboutContent" class="about-content">
+            <p>Loading course information...</p>
+        </div>
+    </section>
+
+    
+
+    <!-- ========== FILTER BAR ========== -->
+    <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="past questions">Past Questions</button>
+        <button class="filter-btn" data-filter="material">Material</button>
+        <button class="filter-btn" data-filter="assignment">Assignment</button>
+        <button class="filter-btn" data-filter="report">Report</button>
+        <button class="filter-btn" data-filter="project">Project</button>
+    </div>
+
+    <!-- ========== FILES CONTAINER ========== -->
+    <div class="files-container" id="filesContainer">
+        <div class="empty-state">
+            <i class="fas fa-folder-open" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem; display: block;"></i>
+            <p>No files available for this course yet.</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem;">Check back later for materials, assignments, and past questions.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="./data/100l.js"></script>
+<script src="./data/200l.js"></script>
+<script src="./data/300l.js"></script>
+<script src="./data/400l/ate.js"></script>
+<script src="./data/400l/are.js"></script>
+<script src="./data/400l/ipe.js"></script>
+<script src="./data/500l/ate.js"></script>
+<script src="./data/500l/ipe.js"></script>
+<script src="./course-page.js"></script>
+
+</body>
+</html>

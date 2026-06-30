@@ -61,6 +61,23 @@ function initHeader() {
     });
 }
 
+// ===============================
+// LOGOUT
+// ===============================
+function logout() {
+
+    // Remove login information
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+
+    alert("You have been logged out.");
+
+    window.location.href = "/index.html";
+
+}
+
+// Allow HTML onclick to access it
+window.logout = logout;
 
 // ---- Start system ----
 loadHeader();

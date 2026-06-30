@@ -1,0 +1,316 @@
+/* ===========================
+   GLOBAL
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:#f5f7fa;
+
+    font-family:Arial,sans-serif;
+
+    color:#1f2937;
+
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+
+.container{
+
+    width:92%;
+
+    max-width:1000px;
+
+    margin:40px auto;
+
+}
+
+/* ===========================
+   TITLE
+=========================== */
+
+h1{
+
+    text-align:center;
+
+    font-size:2rem;
+
+    margin-bottom:10px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:#6b7280;
+
+    margin-bottom:30px;
+
+}
+
+/* ===========================
+   SEARCH AREA
+=========================== */
+
+.search-panel{
+
+    background:#fff;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+    margin-bottom:25px;
+
+}
+
+.search-mode{
+
+    margin-bottom:15px;
+
+}
+
+select{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    border:1px solid #d1d5db;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+/* ===========================
+   SEARCH BAR
+=========================== */
+
+.search-box{
+
+    display:flex;
+
+    align-items:center;
+
+    background:white;
+
+    border:2px solid #dbeafe;
+
+    border-radius:14px;
+
+    padding:0 15px;
+
+    transition:.3s;
+
+}
+
+.search-box:focus-within{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 12px rgba(37,99,235,.2);
+
+}
+
+.search-box input{
+
+    border:none;
+
+    outline:none;
+
+    width:100%;
+
+    padding:15px;
+
+    font-size:16px;
+
+    background:none;
+
+}
+
+/* ===========================
+   RESULT COUNT
+=========================== */
+
+#resultsCount{
+
+    margin:20px 0;
+
+    font-weight:bold;
+
+    color:#374151;
+
+}
+
+/* ===========================
+   FILE CARD
+=========================== */
+
+.file-card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.file-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+}
+
+.file-card h3{
+
+    margin-bottom:12px;
+
+}
+
+/* ===========================
+   META
+=========================== */
+
+.file-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    font-size:14px;
+    color:#64748b;
+    margin-bottom:20px;
+}
+
+
+
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+
+.file-actions{
+
+    margin-top:18px;
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+.file-actions button{
+
+    border:none;
+
+    cursor:pointer;
+
+    padding:10px 18px;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    transition:.3s;
+
+}
+
+.view-btn{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.download-btn{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+.file-actions button:hover{
+
+    opacity:.9;
+
+    transform:scale(1.05);
+
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+
+.empty-state{
+
+    background:white;
+
+    padding:50px;
+
+    text-align:center;
+
+    border-radius:18px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+}
+
+.empty-state h2{
+
+    margin-bottom:10px;
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+    h1{
+
+        font-size:1.5rem;
+
+    }
+
+    .file-meta{
+
+        flex-direction:column;
+
+    }
+
+    .file-actions{
+
+        flex-direction:column;
+
+    }
+
+    .file-actions button{
+
+        width:100%;
+
+    }
+
+}

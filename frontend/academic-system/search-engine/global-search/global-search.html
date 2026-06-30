@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Academic Resource Search</title>
+
+    <link
+        rel="stylesheet"
+        href="global-search.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- =========================
+             PAGE TITLE
+        ========================== -->
+
+        <h1>
+
+            Academic Resource Search
+
+        </h1>
+
+        <p class="subtitle">
+
+            Search across all academic resources from one place.
+
+        </p>
+
+
+        <!-- =========================
+             SEARCH PANEL
+        ========================== -->
+
+        <div class="search-panel">
+
+            <!-- SEARCH MODE -->
+
+            <div class="search-mode">
+
+                <select id="searchMode">
+
+                    <option value="all">
+
+                        All (Default)
+
+                    </option>
+
+                    <option value="course_code">
+
+                        Course Code
+
+                    </option>
+
+                    <option value="title">
+
+                        Course Name
+
+                    </option>
+
+                    <option value="year">
+
+                        Year
+
+                    </option>
+
+                    <option value="category">
+
+                        Category
+
+                    </option>
+
+                    <option value="description">
+
+                        Description
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- SEARCH BAR -->
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search by course code, title, year, category...">
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             RESULTS COUNT
+        ========================== -->
+
+        <div id="resultsCount">
+
+            Showing 0 files
+
+        </div>
+
+
+        <!-- =========================
+             SEARCH RESULTS
+        ========================== -->
+
+        <div id="resultsContainer">
+
+            <!-- JavaScript renders results here -->
+
+        </div>
+
+    </div>
+
+    <script src="global-search.js"></script>
+
+</body>
+
+</html>

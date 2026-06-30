@@ -1,15 +1,15 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
 from backend import db
 from backend.models.user_model import User
 from datetime import datetime
 import bcrypt
 
-
 auth = Blueprint("auth", __name__)
 
 
 # =========================
-# REGISTER ROUTE (STEP 8)
+# REGISTER ROUTE
 # =========================
 @auth.route("/register", methods=["POST"])
 def register():
@@ -24,7 +24,17 @@ def register():
     password = data.get("password")
     role = data.get("role")
 
-    # check if user exists
+    # =========================
+    # VALIDATION
+    # =========================
+    if not full_name or not email or not matric_or_staff_id or not password or not role:
+        return jsonify({
+            "message": "Please fill in all required fields."
+        }), 400
+
+    # =========================
+    # CHECK IF USER EXISTS
+    # =========================
     existing_user = User.query.filter(
         (User.email == email) |
         (User.matric_or_staff_id == matric_or_staff_id)
@@ -32,16 +42,20 @@ def register():
 
     if existing_user:
         return jsonify({
-            "message": "Email or Matric Number already exists"
+            "message": "Email or Matric/Staff ID already exists."
         }), 400
 
-    # 🔐 HASH PASSWORD (SECURITY LAYER)
+    # =========================
+    # HASH PASSWORD
+    # =========================
     hashed_password = bcrypt.hashpw(
-        password.encode('utf-8'),
+        password.encode("utf-8"),
         bcrypt.gensalt()
-    ).decode('utf-8')
+    ).decode("utf-8")
 
-    # create user
+    # =========================
+    # CREATE USER
+    # =========================
     new_user = User(
         full_name=full_name,
         email=email,
@@ -56,49 +70,77 @@ def register():
     db.session.commit()
 
     return jsonify({
-        "message": "Registration successful"
+        "message": "Registration successful."
     }), 201
 
 
 # =========================
-# LOGIN ROUTE (STEP 9)
+# LOGIN ROUTE
 # =========================
 @auth.route("/login", methods=["POST"])
 def login():
 
     data = request.get_json()
 
-    identifier = data.get("identifier")  # email OR matric OR staff ID
+    identifier = data.get("identifier")
     password = data.get("password")
 
-    # find user
+    # =========================
+    # FIND USER
+    # =========================
     user = User.query.filter(
         (User.email == identifier) |
         (User.matric_or_staff_id == identifier)
     ).first()
 
     if not user:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({
+            "message": "Invalid email/matric number or password."
+        }), 401
 
-    # 🔐 VERIFY PASSWORD
+    # =========================
+    # VERIFY PASSWORD
+    # =========================
     if not bcrypt.checkpw(
-        password.encode('utf-8'),
-        user.password.encode('utf-8')
+        password.encode("utf-8"),
+        user.password.encode("utf-8")
     ):
-        return jsonify({"message": "Incorrect password"}), 401
+        return jsonify({
+            "message": "Invalid email/matric number or password."
+        }), 401
 
-    # update login tracking
+    # =========================
+    # UPDATE LOGIN INFO
+    # =========================
     user.login_count += 1
     user.last_login = datetime.utcnow()
 
     db.session.commit()
 
-    return jsonify({
-        "message": "Login successful",
-        "user": {
-            "id": user.id,
-            "name": user.full_name,
+    # =========================
+    # CREATE JWT TOKEN
+    # =========================
+    access_token = create_access_token(
+        identity=str(user.id),
+        additional_claims={
             "role": user.role,
-            "login_count": user.login_count
+            "name": user.full_name
         }
-    }), 200
+    )
+
+    # =========================
+    # RETURN RESPONSE
+    # =========================
+    return jsonify({
+    "message": "Login successful.",
+    "access_token": access_token,
+    "user": {
+        "id": user.id,
+        "full_name": user.full_name,
+        "role": user.role,
+        "level": user.level,
+        "matric_or_staff_id": user.matric_or_staff_id,
+        "residence": user.residence,
+        "login_count": user.login_count
+    }
+}), 200

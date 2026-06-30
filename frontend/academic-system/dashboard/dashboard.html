@@ -1,0 +1,731 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Academic Dashboard</title>
+</head>
+<body>
+
+    <!--
+         GLOBAL HEADER AREA (EXISTING SYSTEM)
+        ==========================================
+        This space is intentionally left EMPTY for the existing global header.
+        The dashboard module assumes the header/nav is provided by MECHCONNECT.
+        DO NOT GENERATE OR STYLE ANY HEADER HERE.
+    -->
+
+    <!-- MAIN DASHBOARD MODULE - SCOPED CONTAINER -->
+    <div class="academic-dashboard">
+
+        <!-- Category Buttons Section (Quick Access) -->
+        
+
+        <!-- Hint text -->
+        <div class="dashboard-hint">
+            <span>Select a level to get started</span>
+        </div>
+
+        <!-- Level Navigation Section -->
+        <div class="level-navigation">
+            <div class="level-grid">
+                <button class="level-btn" data-level="100">100 Level</button>
+                <button class="level-btn" data-level="200">200 Level</button>
+                <button class="level-btn" data-level="300">300 Level</button>
+                <button class="level-btn" data-level="400">400 Level</button>
+                <button class="level-btn special-center" data-level="500">500 Level</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div class="dashboard-content">
+
+            <!-- Options panel (specialization) - only for 400L & 500L -->
+            <div id="optionsPanel" class="options-panel hidden">
+                <div class="options-title">Select Specialization Track</div>
+                <div class="options-buttons">
+                    <button class="option-item" data-option="production">IPE</button>
+                    <button class="option-item" data-option="design">ATE</button>
+                    <button class="option-item" data-option="manufacturing">ARE</button>
+                </div>
+            </div>
+
+            <!-- Semester Selection Panel -->
+            <div id="semesterPanel" class="semester-panel hidden">
+                <div class="semester-title">Choose Semester</div>
+                <div class="semester-buttons">
+                    <button class="semester-btn" data-semester="first"> First Semester</button>
+                    <button class="semester-btn" data-semester="second"> Second Semester</button>
+                </div>
+            </div>
+
+            <!-- Courses List Panel -->
+            <div id="coursesPanel" class="courses-panel hidden">
+                <div class="courses-header">
+                    <span class="courses-title"> Available Courses</span>
+                    <button class="clear-selection-btn" aria-label="Clear selection"> Clear</button>
+                </div>
+                <div id="coursesList" class="courses-list"></div>
+            </div>
+
+        </div>
+
+        <!-- Footer note -->
+        <div class="dashboard-footer-note">
+            <span> Select level  semester  course to access resources</span>
+        </div>
+
+    </div>
+
+    <!-- ############### SCOPED CSS ############### -->
+    <style>
+        /* NO GLOBAL SELECTORS � only .academic-dashboard and its children */
+
+        .academic-dashboard {
+            max-width: 1280px;
+            margin: 1.5rem auto 2rem auto;
+            padding: 0 1.25rem;
+            font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: #1e293b;
+            background: transparent;
+        }
+
+        /* ---- Category Buttons ---- */
+        .academic-dashboard .category-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        .academic-dashboard .category-btn {
+            flex: 1 1 0;
+            min-width: 100px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 0.65rem 0.5rem;
+            font-weight: 550;
+            font-size: 0.9rem;
+            color: #0f172a;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .academic-dashboard .category-btn:hover {
+            background: #eff6ff;
+            border-color: #b9d0f0;
+            transform: translateY(-1px);
+        }
+
+        .academic-dashboard .category-btn:active {
+            transform: translateY(1px);
+        }
+
+        .academic-dashboard .category-btn.active-category {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+
+        /* ---- Hint text ---- */
+        .academic-dashboard .dashboard-hint {
+            text-align: center;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-bottom: 1.2rem;
+        }
+
+        /* ---- Level Grid ---- */
+        .academic-dashboard .level-navigation {
+            margin-bottom: 1.8rem;
+        }
+
+        .academic-dashboard .level-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.9rem;
+        }
+
+        .academic-dashboard .level-btn {
+            background: #fefefe;
+            border: 1px solid #e2edff;
+            border-radius: 20px;
+            padding: 0.9rem 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1e40af;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            letter-spacing: -0.2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .academic-dashboard .level-btn.active-level {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+            box-shadow: 0 4px 8px rgba(30,58,138,0.2);
+        }
+
+        .academic-dashboard .level-btn:hover:not(.active-level) {
+            background: #eef4ff;
+            border-color: #b9d0f0;
+        }
+
+        /* Desktop layout */
+        @media (min-width: 768px) {
+            .academic-dashboard .level-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .academic-dashboard .special-center {
+                grid-column: 1 / -1;
+                justify-self: center;
+                width: 60%;
+                max-width: 280px;
+            }
+
+            .academic-dashboard .category-section {
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* ---- Panels ---- */
+        .academic-dashboard .options-panel,
+        .academic-dashboard .semester-panel,
+        .academic-dashboard .courses-panel {
+            background: #ffffffdd;
+            backdrop-filter: blur(2px);
+            border-radius: 28px;
+            padding: 1.2rem 1rem;
+            margin: 1rem 0 1.2rem;
+            border: 1px solid #eef2ff;
+            animation: fadeSlideUp 0.25s ease;
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .academic-dashboard .hidden {
+            display: none;
+        }
+
+        .academic-dashboard .options-title,
+        .academic-dashboard .semester-title,
+        .academic-dashboard .courses-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #0c4e6e;
+            border-left: 4px solid #3b82f6;
+            padding-left: 12px;
+        }
+
+        .academic-dashboard .options-buttons,
+        .academic-dashboard .semester-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .academic-dashboard .option-item,
+        .academic-dashboard .semester-btn {
+            background: #f1f5f9;
+            border: none;
+            border-radius: 60px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .academic-dashboard .option-item.active-option,
+        .academic-dashboard .semester-btn.active-semester {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 2px 6px rgba(37,99,235,0.2);
+        }
+
+        .academic-dashboard .option-item:hover:not(.active-option),
+        .academic-dashboard .semester-btn:hover:not(.active-semester) {
+            background: #e2e8f0;
+        }
+
+        /* ---- Courses Panel ---- */
+        .academic-dashboard .courses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .academic-dashboard .clear-selection-btn {
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0.3rem 0.7rem;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .academic-dashboard .clear-selection-btn:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .academic-dashboard .courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .academic-dashboard .course-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9fbfe;
+            border-radius: 20px;
+            padding: 0.9rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #eef2ff;
+        }
+
+        .academic-dashboard .course-item:hover {
+            background: #eef4ff;
+            border-color: #cbdffa;
+            transform: translateX(4px);
+        }
+
+        .academic-dashboard .course-code {
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 0.9rem;
+            background: #e6edf5;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            white-space: nowrap;
+        }
+
+        .academic-dashboard .course-title {
+            flex: 1;
+            margin-left: 0.8rem;
+            font-weight: 500;
+        }
+
+        .academic-dashboard .course-arrow {
+            font-size: 1.2rem;
+            color: #3b82f6;
+        }
+
+        /* ---- Info / warning message ---- */
+        .academic-dashboard .info-message {
+            padding: 1rem;
+            text-align: center;
+            background: #fef9e3;
+            border-radius: 24px;
+            color: #b45309;
+            font-size: 0.9rem;
+        }
+
+        /* ---- Footer ---- */
+        .academic-dashboard .dashboard-footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 1.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eef2ff;
+        }
+
+        /* ---- Mobile ---- */
+        @media (max-width: 640px) {
+            .academic-dashboard .category-section {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.6rem;
+            }
+
+            .academic-dashboard .category-btn {
+                min-width: auto;
+                font-size: 0.8rem;
+            }
+
+            .academic-dashboard .level-grid {
+                gap: 0.7rem;
+            }
+
+            .academic-dashboard .level-btn {
+                padding: 0.7rem 0.2rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+    <script>
+    (function () {
+
+        // ------------------------------------------------------------------
+        // COURSES DATABASE
+        // Structured by level > [option >] semester
+        // All course codes use NO spaces (consistent with data files)
+        // ------------------------------------------------------------------
+        const coursesDB = {
+            "100": {
+                first: [
+                    { code: "GST101", title: "Communication in English I" },
+                    { code: "GST103", title: "Nigerian Peoples & Culture" },
+                    { code: "MTH101", title: "Elementary Mathematics I" },
+                    { code: "MTH103", title: "Vectors & Geometry" },
+                    { code: "PHY101", title: "General Physics I" }
+                ],
+                second: [
+                    { code: "GST102", title: "Communication in English II" },
+                    { code: "MTH102", title: "Elementary Mathematics II" },
+                    { code: "PHY102", title: "General Physics II" },
+                    { code: "ENG101", title: "Engineering Fundamentals" }
+                ]
+            },
+            "200": {
+                first: [
+                    { code: "MEE201", title: "Strength of Materials I" },
+                    { code: "MEE203", title: "Thermodynamics I" },
+                    { code: "MEE205", title: "Fluid Mechanics I" }
+                ],
+                second: [
+                    { code: "MEE202", title: "Strength of Materials II" },
+                    { code: "MEE204", title: "Thermodynamics II" },
+                    { code: "MEE206", title: "Machine Drawing" }
+                ]
+            },
+            "300": {
+                first: [
+                    { code: "MEE301", title: "Dynamics of Machinery" },
+                    { code: "MEE303", title: "Heat Transfer" },
+                    { code: "MEE305", title: "Control Engineering" }
+                ],
+                second: [
+                    { code: "MEE302", title: "Vibration Analysis" },
+                    { code: "MEE304", title: "Refrigeration & AC" },
+                    { code: "MEE306", title: "Finite Element Methods" }
+                ]
+            },
+            "400": {
+                production: {
+                    first: [
+                        { code: "MEE401", title: "Production Planning & Control" },
+                        { code: "MEE403", title: "Manufacturing Processes" },
+                        { code: "MEE405", title: "Quality Engineering" }
+                    ],
+                    second: [
+                        { code: "MEE402", title: "Supply Chain Management" },
+                        { code: "MEE404", title: "Industrial Automation" },
+                        { code: "MEE406", title: "Project Management" }
+                    ]
+                },
+                design: {
+                    first: [
+                        { code: "MEE411", title: "Mechanical Design I" },
+                        { code: "MEE413", title: "CAD/CAM Fundamentals" },
+                        { code: "MEE415", title: "Machine Element Design" }
+                    ],
+                    second: [
+                        { code: "MEE412", title: "Mechanical Design II" },
+                        { code: "MEE414", title: "Advanced CAD" },
+                        { code: "MEE416", title: "Design Optimization" }
+                    ]
+                },
+                manufacturing: {
+                    first: [
+                        { code: "MEE421", title: "Advanced Manufacturing" },
+                        { code: "MEE423", title: "CNC Technology" },
+                        { code: "MEE425", title: "Tool Engineering" }
+                    ],
+                    second: [
+                        { code: "MEE422", title: "Additive Manufacturing" },
+                        { code: "MEE424", title: "Lean Manufacturing" },
+                        { code: "MEE426", title: "Robotics in Mfg" }
+                    ]
+                }
+            },
+            "500": {
+                production: {
+                    first: [
+                        { code: "MEE501", title: "Advanced Production Systems" },
+                        { code: "MEE503", title: "Operations Research" },
+                        { code: "MEE505", title: "Facility Design" }
+                    ],
+                    second: [
+                        { code: "MEE502", title: "Smart Manufacturing" },
+                        { code: "MEE504", title: "Simulation & Modelling" },
+                        { code: "MEE506", title: "Industry 4.0" }
+                    ]
+                },
+                design: {
+                    first: [
+                        { code: "MEE511", title: "Advanced Mechanical Design" },
+                        { code: "MEE513", title: "Computational Mechanics" },
+                        { code: "MEE515", title: "Product Lifecycle Mgmt" }
+                    ],
+                    second: [
+                        { code: "MEE512", title: "Sustainable Design" },
+                        { code: "MEE514", title: "Finite Element Analysis" },
+                        { code: "MEE516", title: "Mechatronics Design" }
+                    ]
+                },
+                manufacturing: {
+                    first: [
+                        { code: "MEE521", title: "Advanced Materials Processing" },
+                        { code: "MEE523", title: "Automated Systems" },
+                        { code: "MEE525", title: "Industrial Robotics" }
+                    ],
+                    second: [
+                        { code: "MEE522", title: "Digital Manufacturing" },
+                        { code: "MEE524", title: "Quality Control Systems" },
+                        { code: "MEE526", title: "Maintenance Engineering" }
+                    ]
+                }
+            }
+        };
+
+        // ------------------------------------------------------------------
+        // STATE
+        // ------------------------------------------------------------------
+        let currentLevel    = null;
+        let currentOption   = null;
+        let currentSemester = null;
+
+        // ------------------------------------------------------------------
+        // DOM REFS
+        // ------------------------------------------------------------------
+        const levelBtns     = document.querySelectorAll('.level-btn');
+        const optionsPanel  = document.getElementById('optionsPanel');
+        const semesterPanel = document.getElementById('semesterPanel');
+        const coursesPanel  = document.getElementById('coursesPanel');
+        const coursesListEl = document.getElementById('coursesList');
+        const clearBtn      = document.querySelector('.clear-selection-btn');
+        const hintEl        = document.querySelector('.dashboard-hint span');
+
+        // ------------------------------------------------------------------
+        // HELPERS
+        // ------------------------------------------------------------------
+        function hideAllPanels() {
+            optionsPanel.classList.add('hidden');
+            semesterPanel.classList.add('hidden');
+            coursesPanel.classList.add('hidden');
+        }
+
+        function setHint(text) {
+            if (hintEl) hintEl.textContent = text;
+        }
+
+        function resetDashboard() {
+            currentLevel    = null;
+            currentOption   = null;
+            currentSemester = null;
+            levelBtns.forEach(b => b.classList.remove('active-level'));
+            document.querySelectorAll('.option-item').forEach(b => b.classList.remove('active-option'));
+            document.querySelectorAll('.semester-btn').forEach(b => b.classList.remove('active-semester'));
+            coursesListEl.innerHTML = '';
+            hideAllPanels();
+            setHint('Select a level to get started');
+        }
+
+        // ------------------------------------------------------------------
+        // LOAD & RENDER COURSES
+        // ------------------------------------------------------------------
+        function loadCourses() {
+            if (!currentLevel || !currentSemester) {
+                coursesPanel.classList.add('hidden');
+                return;
+            }
+
+            let courses = [];
+            const isUpperLevel = currentLevel === '400' || currentLevel === '500';
+
+            if (isUpperLevel) {
+                if (!currentOption) {
+                    coursesListEl.innerHTML = '<div class="info-message"> Please select a specialization track first.</div>';
+                    coursesPanel.classList.remove('hidden');
+                    return;
+                }
+                courses = coursesDB[currentLevel]?.[currentOption]?.[currentSemester] ?? [];
+            } else {
+                courses = coursesDB[currentLevel]?.[currentSemester] ?? [];
+            }
+
+            if (courses.length === 0) {
+                coursesListEl.innerHTML = '<div class="info-message"> No courses available for this selection.</div>';
+            } else {
+                coursesListEl.innerHTML = courses.map(c => `
+                    <div class="course-item" data-code="${c.code}">
+                        <div class="course-code">${c.code}</div>
+                        <div class="course-title">${c.title}</div>
+                        <span class="course-arrow"></span>
+                    </div>
+                `).join('');
+
+                coursesListEl.querySelectorAll('.course-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const code = item.getAttribute('data-code');
+                        if (code) redirectToCoursePage(code);
+                    });
+                });
+            }
+
+            coursesPanel.classList.remove('hidden');
+        }
+
+        // ------------------------------------------------------------------
+        // REDIRECT
+        // ------------------------------------------------------------------
+        function redirectToCoursePage(courseCode) {
+            // courseCode already has no spaces � safe to use directly
+            window.location.href = `../course-page/course-page.html?course=${encodeURIComponent(courseCode)}`;
+        }
+
+        // ------------------------------------------------------------------
+        // EVENT HANDLERS
+        // ------------------------------------------------------------------
+        function onLevelSelect(level) {
+            currentLevel    = level;
+            currentOption   = null;
+            currentSemester = null;
+
+            levelBtns.forEach(b => b.classList.toggle('active-level', b.getAttribute('data-level') === level));
+            document.querySelectorAll('.option-item').forEach(b => b.classList.remove('active-option'));
+            document.querySelectorAll('.semester-btn').forEach(b => b.classList.remove('active-semester'));
+            coursesListEl.innerHTML = '';
+            coursesPanel.classList.add('hidden');
+
+            if (level === '400' || level === '500') {
+                optionsPanel.classList.remove('hidden');
+                semesterPanel.classList.add('hidden');
+                setHint('Now choose your specialization track');
+            } else {
+                optionsPanel.classList.add('hidden');
+                semesterPanel.classList.remove('hidden');
+                setHint('Now choose a semester');
+            }
+        }
+
+        function onOptionSelect(option) {
+            if (!currentLevel || (currentLevel !== '400' && currentLevel !== '500')) return;
+            currentOption   = option;
+            currentSemester = null;
+
+            document.querySelectorAll('.option-item').forEach(b =>
+                b.classList.toggle('active-option', b.getAttribute('data-option') === option)
+            );
+            document.querySelectorAll('.semester-btn').forEach(b => b.classList.remove('active-semester'));
+            coursesPanel.classList.add('hidden');
+            coursesListEl.innerHTML = '';
+
+            semesterPanel.classList.remove('hidden');
+            setHint('Now choose a semester');
+        }
+
+        function onSemesterSelect(semester) {
+            if (!currentLevel) return;
+            if ((currentLevel === '400' || currentLevel === '500') && !currentOption) {
+                coursesListEl.innerHTML = '<div class="info-message"> Please choose a specialization first.</div>';
+                coursesPanel.classList.remove('hidden');
+                return;
+            }
+
+            currentSemester = semester;
+            document.querySelectorAll('.semester-btn').forEach(b =>
+                b.classList.toggle('active-semester', b.getAttribute('data-semester') === semester)
+            );
+            setHint('Select a course below');
+            loadCourses();
+        }
+
+        // ------------------------------------------------------------------
+        // CATEGORY BUTTONS
+        // ------------------------------------------------------------------
+        function initCategoryButtons() {
+            const routes = {
+                'materials':       '/material-search',
+                'assignments':     '/assignment-search',
+                'projects':        '/project-search',
+                'tutorials':       '/tutorial-search',
+                'class-questions': '/class-question-search'
+            };
+
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Visual feedback
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active-category'));
+                    btn.classList.add('active-category');
+
+                    const type = btn.getAttribute('data-search-type');
+                    const dest = routes[type] || `/${type}-page`;
+                    window.location.href = dest;
+                });
+            });
+        }
+
+        // ------------------------------------------------------------------
+        // BIND EVENTS (using event delegation for option/semester panels)
+        // ------------------------------------------------------------------
+        function bindEvents() {
+            levelBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const level = btn.getAttribute('data-level');
+                    if (level) onLevelSelect(level);
+                });
+            });
+
+            // Delegation on static parents � no rebinding needed
+            optionsPanel.addEventListener('click', e => {
+                const btn = e.target.closest('.option-item');
+                if (btn) onOptionSelect(btn.getAttribute('data-option'));
+            });
+
+            semesterPanel.addEventListener('click', e => {
+                const btn = e.target.closest('.semester-btn');
+                if (btn) onSemesterSelect(btn.getAttribute('data-semester'));
+            });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', resetDashboard);
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // INIT
+        // ------------------------------------------------------------------
+        function init() {
+            initCategoryButtons();
+            bindEvents();
+            resetDashboard();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+    })();
+    </script>
+
+</body>
+</html>
